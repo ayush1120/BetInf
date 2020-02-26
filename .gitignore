@@ -1,4 +1,5 @@
-./envStoned/*
+# ./envStoned/*
+# envStoned
 
 # Django #
 *.log
