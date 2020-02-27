@@ -13,22 +13,19 @@
   <link href="{% static "css/style.css" %}" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-  <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">BOOBI</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="#">All Matches</a></li>
-            <li><a href="#">Active Matches</a></li>
-            <li><a href="#">Sign in</a></li>
-          </ul>
-        <ul id="nav-mobile" class="sidenav">
-            <li><a href="#">All Matches</a></li>
-            <li><a href="#">Active Matches</a></li>
-            <li><a href="#">Sign in</a></li>
-          </ul>
-        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
-  
+  {% include 'navbar.html' %}
+  <form id="cancelBet" action="{% url 'bet' %}"
+    enctype="multipart/form-data" method='POST'>
+    <input type="hidden" name="match_pk" value="{{bet.match_pk}}">
+  </form>
+  <form id="submitBet" action="{% url 'confirm' %}"
+    enctype="multipart/form-data" method='POST'>
+    <input type="hidden" name="match_pk" value="{{bet.match_pk}}">
+    <input type="hidden" name="roll_no" value="{{bet.roll_no}}">
+    <input type="hidden" name="team_name" value="{{bet.team_name}}">
+    <input type="hidden" name="amount" value="{{bet.amount}}">
+    <input type="hidden" name="payout" value="{{bet.payout}}">
+  </form>
 
   <div class="container">
     <div class="section">
@@ -56,7 +53,7 @@
                         </tr>
                         <tr>
                           <td>Potential Payout</td>
-                          <td>{{bet.multiplier}}</td>
+                          <td>{{bet.payout}}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -64,12 +61,12 @@
                     <br>
                     <div class="row">
                       <div class="col s6">
-                        <button class="btn waves-effect waves-light red" type="submit" name="action">Cancel
+                        <button class="btn waves-effect waves-light red" type="submit" form="cancelBet" name="action">Cancel
                           <i class="material-icons right">close</i>
                         </button>
                       </div>
                       <div class="col s6">
-                        <button class="btn waves-effect waves-light green darken-3" type="submit" name="action">Submit
+                        <button class="btn waves-effect waves-light green darken-3" type="submit" form="submitBet" name="action">Submit
                           <i class="material-icons right">send</i>
                         </button>
                       </div>

@@ -15,21 +15,7 @@
 </head>
 
 <body>
-  <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">BOOBI</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="#">All Matches</a></li>
-            <li><a href="#">Active Matches</a></li>
-            <li><a href="#">Sign in</a></li>
-          </ul>
-        <ul id="nav-mobile" class="sidenav">
-            <li><a href="#">All Matches</a></li>
-            <li><a href="#">Active Matches</a></li>
-            <li><a href="#">Sign in</a></li>
-          </ul>
-        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+  {% include 'navbar.html' %}
 
 
   <div class="container">
@@ -41,7 +27,6 @@
 
               <h2 class="header center orange-text">Make Bet</h2>
               <form id="Make_bet" action="{% url 'confirm' %}" enctype="multipart/form-data" method='POST'>
-                {% csrf_token %}
                 <input type="hidden" name="match_pk" value="{{match.match_pk}}">
                 <p>Match Description</p>
                 <h3>{{match.team1.name}}: {{match.team2.name}}</h3>

@@ -44,20 +44,29 @@ def add_data():
     User.objects.create_user('mml', 'mml@boobi.com', 'mml123')
     User.objects.create_user('sukhiya', 'sukhiya@boobi.com', 'sukhiya123')
     bookie, _ = Group.objects.get_or_create(name="Bookie")
+    print("lol : ", bookie.name)
+
     scout, _ = Group.objects.get_or_create(name="Scout")
 
-
+    bookie, _ = Group.objects.get_or_create(name="Bookie") 
+    
     mml = User.objects.get(username="mml")
     sukhiya = User.objects.get(username="sukhiya")
 
-    # mml.groups.add(bookie)
+
+    mml.groups.add(Group.objects.get(name="Bookie"))
+    mml.save()
+
+    sukhiya.groups.add(Group.objects.get(name="Scout"))
+    sukhiya.save()
+    # print("\n\nmml groups : ", mml.groups)
     # sukhiya.groups.add(scout)
     # sukhiya.save()
     
     
-    scout.user_set.add(sukhiya)
+    # scout.user_set.add(sukhiya)
     # scout.save()
-    bookie.user_set.add(mml)
+    # bookie.user_set.add(mml)
     # bookie.save()
     
     for sport in sports:
@@ -116,6 +125,9 @@ if __name__ == "__main__":
     else:
         print("The file does not exist")
     
+    if os.path.exists(os.path.join(BASE_DIR, "boobi", "migrations")):
+        shutil.rmtree(os.path.join(BASE_DIR, "boobi", "migrations"))
+
     if os.path.exists(os.path.join(BASE_DIR, "stoned", "__pycache__")):
         shutil.rmtree(os.path.join(BASE_DIR, "stoned", "__pycache__"))
     

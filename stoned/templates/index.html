@@ -15,21 +15,7 @@
 </head>
 
 <body>
-  <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">BOOBI</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="#">All Matches</a></li>
-            <li><a href="#">Active Matches</a></li>
-            <li><a href="#">Sign in</a></li>
-          </ul>
-        <ul id="nav-mobile" class="sidenav">
-            <li><a href="#">All Matches</a></li>
-            <li><a href="#">Active Matches</a></li>
-            <li><a href="#">Sign in</a></li>
-          </ul>
-        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+  {% include 'navbar.html' %}
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <br><br>
@@ -46,38 +32,44 @@
     <div class="section">
       <div class="row">
         {% for match in matches %}
-        <form id="{{ match.match_pk|addstr:"inc_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
-          {% csrf_token %}
+        {% if user_group.scout %}
+        <form id="{{ match.match_pk|addstr:"inc_team1_score" }}" action="{% url 'updateMatch' %}"
+          enctype="multipart/form-data" method='POST'>
           <input type="hidden" name="match_pk" value="{{match.match_pk}}">
           <input type="hidden" name="team_num" value="1">
           <input type="hidden" name="inc" value="1">
         </form>
-        <form id="{{ match.match_pk|addstr:"dec_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
-          {% csrf_token %}
+        <form id="{{ match.match_pk|addstr:"dec_team1_score" }}" action="{% url 'updateMatch' %}"
+          enctype="multipart/form-data" method='POST'>
           <input type="hidden" name="match_pk" value="{{match.match_pk}}">
           <input type="hidden" name="team_num" value="1">
           <input type="hidden" name="inc" value="0">
         </form>
-        <form id="{{ match.match_pk|addstr:"inc_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
-          {% csrf_token %}
+        <form id="{{ match.match_pk|addstr:"inc_team2_score" }}" action="{% url 'updateMatch' %}"
+          enctype="multipart/form-data" method='POST'>
           <input type="hidden" name="match_pk" value="{{match.match_pk}}">
           <input type="hidden" name="team_num" value="2">
           <input type="hidden" name="inc" value="1">
         </form>
-        <form id="{{ match.match_pk|addstr:"dec_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
-          {% csrf_token %}
+        <form id="{{ match.match_pk|addstr:"dec_team2_score" }}" action="{% url 'updateMatch' %}"
+          enctype="multipart/form-data" method='POST'>
           <input type="hidden" name="match_pk" value="{{match.match_pk}}">
           <input type="hidden" name="team_num" value="2">
           <input type="hidden" name="inc" value="0">
         </form>
-        <form id="{{ match.match_pk|addstr:"make_bet" }}" action="{% url 'bet' %}" enctype="multipart/form-data" method='POST'>
-          {% csrf_token %}
+        {% endif %}
+        {% if user_group.bookie %}
+        <form id="{{ match.match_pk|addstr:"make_bet" }}" action="{% url 'bet' %}" enctype="multipart/form-data"
+          method='POST'>
           <input type="hidden" name="match_pk" value="{{match.match_pk}}">
         </form>
+        {% endif %}
+        
         <div class="col m6 s12">
           <div class="card darken-1 center-align">
             <div class="card-content">
               <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}} ({{match.sport}})</b></span>
+              {% if user_group.admin %}
               Status
               <div class="switch">
                 <label>
@@ -96,6 +88,7 @@
                   On
                 </label>
               </div>
+              {% endif %}
               <br>
               <div class="divider"></div>
               <div class="row">
@@ -114,12 +107,12 @@
                 <div class="col s5">
                   <div class="row">
                     <h4>{{match.team1_score}}</h4>
-
+                    {% if user_group.scout %}
                     <button type='submit' form="{{ match.match_pk|addstr:"inc_team1_score" }}"
-                        class="waves-effect waves-light btn-small">+</button>
+                      class="waves-effect waves-light btn-small">+</button>
                     <button type='submit' form="{{ match.match_pk|addstr:"dec_team1_score" }}"
-                        class="waves-effect waves-light btn-small">-</button>
-
+                      class="waves-effect waves-light btn-small">-</button>
+                    {% endif %}
 
                   </div>
                 </div>
@@ -129,10 +122,12 @@
                 <div class="col s5">
                   <div class="row">
                     <h4>{{match.team2_score}}</h4>
+                    {% if user_group.scout %}
                     <button type='submit' form="{{ match.match_pk|addstr:"inc_team2_score" }}"
-                        class="waves-effect waves-light btn-small">+</button>
+                      class="waves-effect waves-light btn-small">+</button>
                     <button type='submit' form="{{ match.match_pk|addstr:"dec_team2_score" }}"
-                        class="waves-effect waves-light btn-small">-</button>
+                      class="waves-effect waves-light btn-small">-</button>
+                    {% endif %}
                   </div>
                 </div>
               </div>
@@ -150,10 +145,12 @@
                   <h4>{{match.get_multipliers.1}}</h4>
                 </div>
               </div>
+              {% if user_group.bookie %}
+              <button type="submit" form="{{ match.match_pk|addstr:"make_bet" }}"
+                class="waves-effect waves-light btn orange">Bet</button>
+              {% endif %}
 
-              <button type="submit" form="{{ match.match_pk|addstr:"make_bet" }}" class="waves-effect waves-light btn orange">Bet</button>
-              
-              
+
             </div>
           </div>
         </div>

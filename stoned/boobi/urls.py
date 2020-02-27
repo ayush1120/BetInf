@@ -28,7 +28,10 @@ urlpatterns = [
     path('confirm', views.show_confirm_form, name='confirm'),
     path('updateScores', views.updateMatch, name = "updateMatch"),
     path('signin', views.signIn, name= "signin"),
+    path('signout', views.signOut, name= "signout"),
+    path('loda', views.loda, name="loda"),
     path('', views.show_home, name = 'home'),
+    
     
 
     
