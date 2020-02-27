@@ -26,7 +26,7 @@ SECRET_KEY = 'q1j71oy+s8!z!^7jjfk8v__17pp=)o01@5_s16+!gc@x%g^s7r'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')  
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 INSTALLED_APPS = [
@@ -63,6 +63,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'addstr': 'boobi.templatetags.boobi_extras',
+
+            }
         },
     },
 ]
@@ -122,4 +126,3 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static/"),
 ]
-

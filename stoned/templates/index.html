@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load addstr %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,6 +35,30 @@
     <div class="section">
       <div class="row">
         {% for match in matches %}
+        <form id="{{ match.match_pk|addstr:"inc_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
+          {% csrf_token %}
+          <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+          <input type="hidden" name="team_num" value="1">
+          <input type="hidden" name="inc" value="1">
+        </form>
+        <form id="{{ match.match_pk|addstr:"dec_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
+          {% csrf_token %}
+          <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+          <input type="hidden" name="team_num" value="1">
+          <input type="hidden" name="inc" value="0">
+        </form>
+        <form id="{{ match.match_pk|addstr:"inc_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
+          {% csrf_token %}
+          <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+          <input type="hidden" name="team_num" value="2">
+          <input type="hidden" name="inc" value="1">
+        </form>
+        <form id="{{ match.match_pk|addstr:"dec_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data" method='POST'>
+          {% csrf_token %}
+          <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+          <input type="hidden" name="team_num" value="2">
+          <input type="hidden" name="inc" value="0">
+        </form>
         <div class="col m6 s12">
           <div class="card darken-1 center-align">
             <div class="card-content">
@@ -56,8 +80,13 @@
                 <div class="col s5">
                   <div class="row">
                     <h4>{{match.team1_score}}</h4>
-                    <a class="waves-effect waves-light btn-small">+</a>
-                    <a class="waves-effect waves-light btn-small">-</a>
+
+                    <button type='submit' form="{{ match.match_pk|addstr:"inc_team1_score" }}"><a
+                        class="waves-effect waves-light btn-small">+</a></button> -->
+                    <button type='submit' form="{{ match.match_pk|addstr:"dec_team1_score" }}"><a
+                        class="waves-effect waves-light btn-small">-</a></button>
+
+
                   </div>
                 </div>
                 <div class="col s2">
@@ -66,8 +95,10 @@
                 <div class="col s5">
                   <div class="row">
                     <h4>{{match.team2_score}}</h4>
-                    <a class="waves-effect waves-light btn-small">+</a>
-                    <a class="waves-effect waves-light btn-small">-</a>
+                    <button type='submit' form="{{ match.match_pk|addstr:"inc_team2_score" }}"><a
+                        class="waves-effect waves-light btn-small">+</a></button>
+                    <button type='submit' form="{{ match.match_pk|addstr:"dec_team2_score" }}"><a
+                        class="waves-effect waves-light btn-small">-</a></button>
                   </div>
                 </div>
               </div>
