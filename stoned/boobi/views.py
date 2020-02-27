@@ -29,10 +29,14 @@ def show_home(request):
 
 
 def show_bet_form(request):
+    match_pk = request.POST.get("match_pk")
+    match = Match.objects.get(match_pk=match_pk)
     if not request.user.is_authenticated:
         return redirect('home')
     
-    return render(request, 'bet.html')
+    return render(request, 'bet.html',{
+        'match' : match
+    })
 
 @csrf_exempt
 def updateMatch(request):
@@ -68,5 +72,28 @@ def updateMatch(request):
         "MEDIA_URL" : MEDIA_URL
     })
 
+
+def show_confirm_form(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
     
-    
+    match_pk = request.POST.get("match_pk")
+    roll_no = request.POST.get("roll_no")
+    team_num = int(request.POST.get("team_name"))
+    amount = request.POST.get("amount")
+
+    match = Match.objects.get(match_pk=match_pk)
+    teams = [match.team1.name, match.team2.name]
+    team_name = teams[team_num-1]
+
+
+    bet = {
+        "roll_no":roll_no,
+        "team_name":team_name,
+        "amount":amount,
+        "match_pk":match_pk
+    }
+
+    return render(request, 'confirm.html',{
+        "bet" : bet
+    })

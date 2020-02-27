@@ -25,8 +25,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
  
 urlpatterns = [
     path('bet', views.show_bet_form, name='bet'),
+    path('confirm', views.show_confirm_form, name='confirm'),
     path('updateScores', views.updateMatch, name = "updateMatch"),
     path('', views.show_home, name = 'home'),
+
     
 ]
 

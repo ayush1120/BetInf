@@ -59,6 +59,10 @@
           <input type="hidden" name="team_num" value="2">
           <input type="hidden" name="inc" value="0">
         </form>
+        <form id="{{ match.match_pk|addstr:"make_bet" }}" action="{% url 'bet' %}" enctype="multipart/form-data" method='POST'>
+          {% csrf_token %}
+          <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+        </form>
         <div class="col m6 s12">
           <div class="card darken-1 center-align">
             <div class="card-content">
@@ -100,10 +104,10 @@
                   <div class="row">
                     <h4>{{match.team1_score}}</h4>
 
-                    <button type='submit' form="{{ match.match_pk|addstr:"inc_team1_score" }}"><a
-                        class="waves-effect waves-light btn-small">+</a></button> -->
-                    <button type='submit' form="{{ match.match_pk|addstr:"dec_team1_score" }}"><a
-                        class="waves-effect waves-light btn-small">-</a></button>
+                    <button type='submit' form="{{ match.match_pk|addstr:"inc_team1_score" }}"
+                        class="waves-effect waves-light btn-small">+</button>
+                    <button type='submit' form="{{ match.match_pk|addstr:"dec_team1_score" }}"
+                        class="waves-effect waves-light btn-small">-</button>
 
 
                   </div>
@@ -114,10 +118,10 @@
                 <div class="col s5">
                   <div class="row">
                     <h4>{{match.team2_score}}</h4>
-                    <button type='submit' form="{{ match.match_pk|addstr:"inc_team2_score" }}"><a
-                        class="waves-effect waves-light btn-small">+</a></button>
-                    <button type='submit' form="{{ match.match_pk|addstr:"dec_team2_score" }}"><a
-                        class="waves-effect waves-light btn-small">-</a></button>
+                    <button type='submit' form="{{ match.match_pk|addstr:"inc_team2_score" }}"
+                        class="waves-effect waves-light btn-small">+</button>
+                    <button type='submit' form="{{ match.match_pk|addstr:"dec_team2_score" }}"
+                        class="waves-effect waves-light btn-small">-</button>
                   </div>
                 </div>
               </div>
@@ -135,13 +139,10 @@
                   <h4>{{match.get_multipliers.1}}</h4>
                 </div>
               </div>
-<<<<<<< HEAD
 
-
-=======
-              <a class="waves-effect waves-light btn orange">Bet</a>
+              <button type="submit" form="{{ match.match_pk|addstr:"make_bet" }}" class="waves-effect waves-light btn orange">Bet</button>
               
->>>>>>> 1d6b9ad11acc1b2f70d9cbcbce2c00bf36fcbc06
+              
             </div>
           </div>
         </div>
