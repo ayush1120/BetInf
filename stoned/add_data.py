@@ -25,6 +25,16 @@ teams = ["Battle Hawks",
  "Dementors",
  "Vikings"]
 
+team_images = {"Battle Hawks" : os.path.join(settings.BASE_DIR, "team_logos", "Battle_Hawk.png"),
+ "Renegades" : os.path.join(settings.BASE_DIR, "team_logos", "Renegades.png"), 
+ "Defenders" : os.path.join(settings.BASE_DIR, "team_logos", "Defenders.png"),
+ "Spartans" : os.path.join(settings.BASE_DIR, "team_logos", "Spartans.png"),
+ "Vipers" : os.path.join(settings.BASE_DIR, "team_logos", "Vipers.png"),
+ "Phoenix" : os.path.join(settings.BASE_DIR, "team_logos", "Phoenix.png"),
+ "Dementors" : os.path.join(settings.BASE_DIR, "team_logos", "Dementors.png"),
+ "Vikings" : os.path.join(settings.BASE_DIR, "team_logos", "Vikings.png")
+ }
+
 sports = ["Badminton", "Tennis", "Basketball"]
 
 def add_data():
@@ -38,6 +48,7 @@ def add_data():
     for team in teams:
         a = Team()
         a.name = team
+        a.logo = team_images[team]
         a.save()
     num_matches = random.randint(2, 5)
     

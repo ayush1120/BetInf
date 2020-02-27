@@ -12,13 +12,18 @@ import datetime
 import signal
 import random
 import uuid
-from stoned.settings import BASE_DIR, STATICFILES_DIRS
+from stoned.settings import BASE_DIR, STATICFILES_DIRS, MEDIA_URL
 from boobi.models import Match
 
 def show_home(request):
     matches = Match.objects.all()
+    for match in matches:
+        if match.team1.logo != None:
+            print(str(match.team1.logo.url))
+            print(str(match.team1.logo.url))
     return render(request, 'index.html', {
-        'matches' : matches
+        'matches' : matches,
+        "MEDIA_URL" : MEDIA_URL
     })
 
 
