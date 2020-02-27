@@ -6,6 +6,7 @@ import os
 import shutil
 import random
 import django
+from django.db import models
 
 random.seed(69)
 
@@ -25,14 +26,14 @@ teams = ["Battle Hawks",
  "Dementors",
  "Vikings"]
 
-team_images = {"Battle Hawks" : os.path.join(settings.BASE_DIR, "team_logos", "Battle_Hawk.png"),
- "Renegades" : os.path.join(settings.BASE_DIR, "team_logos", "Renegades.png"), 
- "Defenders" : os.path.join(settings.BASE_DIR, "team_logos", "Defenders.png"),
- "Spartans" : os.path.join(settings.BASE_DIR, "team_logos", "Spartans.png"),
- "Vipers" : os.path.join(settings.BASE_DIR, "team_logos", "Vipers.png"),
- "Phoenix" : os.path.join(settings.BASE_DIR, "team_logos", "Phoenix.png"),
- "Dementors" : os.path.join(settings.BASE_DIR, "team_logos", "Dementors.png"),
- "Vikings" : os.path.join(settings.BASE_DIR, "team_logos", "Vikings.png")
+team_images = {"Battle Hawks" : os.path.join("team_logos", "Battle_Hawk.png"),
+ "Renegades" : os.path.join("team_logos", "Renegades.png"), 
+ "Defenders" : os.path.join("team_logos", "Defenders.png"),
+ "Spartans" : os.path.join("team_logos", "Spartans.png"),
+ "Vipers" : os.path.join("team_logos", "Vipers.png"),
+ "Phoenix" : os.path.join("team_logos", "Phoenix.png"),
+ "Dementors" : os.path.join("team_logos", "Dementors.png"),
+ "Vikings" : os.path.join("team_logos", "Vikings.png")
  }
 
 sports = ["Badminton", "Tennis", "Basketball"]
@@ -40,6 +41,8 @@ sports = ["Badminton", "Tennis", "Basketball"]
 def add_data():
     serial=1
     User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', 'ayush')
+    User.objects.create_user('mml', 'mml@boobi.com', 'mml123')
+    User.objects.create_user('sukhiya', 'sukhiya@boobi.com', 'sukhiya123')
     
     for sport in sports:
         a = Sport()
@@ -48,7 +51,8 @@ def add_data():
     for team in teams:
         a = Team()
         a.name = team
-        a.logo = team_images[team]
+        a.logo.name = team_images[team]
+        # a.logo.path = os.path.join(settings.MEDIA_ROOT, a.logo.name)
         a.save()
     num_matches = random.randint(2, 5)
     

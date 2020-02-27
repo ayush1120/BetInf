@@ -20,8 +20,13 @@ from django.urls import path
 from boobi import views
 
 from .views import *
-
+from django.contrib.staticfiles.urls import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+ 
 urlpatterns = [
     path('bet', views.show_bet_form, name='bet'),
     path('', views.show_home, name = 'home'),
 ]
+
+# urlpatterns += staticfiles_urlpatterns()
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
