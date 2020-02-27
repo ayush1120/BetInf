@@ -15,7 +15,7 @@ django.setup()
 
 from stoned import settings
 from boobi.models import *
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 teams = ["Battle Hawks",
  "Renegades", 
@@ -43,6 +43,22 @@ def add_data():
     User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', 'ayush')
     User.objects.create_user('mml', 'mml@boobi.com', 'mml123')
     User.objects.create_user('sukhiya', 'sukhiya@boobi.com', 'sukhiya123')
+    bookie, _ = Group.objects.get_or_create(name="Bookie")
+    scout, _ = Group.objects.get_or_create(name="Scout")
+
+
+    mml = User.objects.get(username="mml")
+    sukhiya = User.objects.get(username="sukhiya")
+
+    # mml.groups.add(bookie)
+    # sukhiya.groups.add(scout)
+    # sukhiya.save()
+    
+    
+    scout.user_set.add(sukhiya)
+    # scout.save()
+    bookie.user_set.add(mml)
+    # bookie.save()
     
     for sport in sports:
         a = Sport()
