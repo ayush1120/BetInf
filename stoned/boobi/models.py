@@ -1,5 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from boobi.includes.bett import water_down, get_odds
+
 # Create your models here.
 
 teams_abbrv = {
@@ -16,13 +20,13 @@ teams_abbrv = {
 
 
 class Sport(models.Model):
-    name = models.CharField(max_length=25)
+    name = models.CharField(max_length=25, unique=True)
     def __str__(self):
         return self.name
 
 class Team(models.Model):
-    name = models.CharField(max_length=25)
-    logo = models.FileField(verbose_name="Team Logo", upload_to="team_logos/")
+    name = models.CharField(max_length=25, unique=True)
+    logo = models.FileField(verbose_name="Team Logo", upload_to="team_logos/", null=True)
 
     def __str__(self):
         return self.name 
@@ -30,7 +34,8 @@ class Team(models.Model):
 
 class Match(models.Model):
     match_pk = models.IntegerField(primary_key=True, auto_created=True)
-    match_id = models.CharField(editable=True, max_length=25)
+    match_id = models.CharField(editable=True, max_length=25, null=True)
+    match_serial = models.BigIntegerField(null=True)
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team1")
     team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team2")
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
@@ -39,6 +44,8 @@ class Match(models.Model):
     team2_amount = models.FloatField(verbose_name="Amount Bet for Team 2", default=500)
     team1_score = models.IntegerField(verbose_name="Team 1 Score", default=0)
     team2_score = models.IntegerField(verbose_name="Team 2 Score", default=0)
+    active = models.BooleanField(default=False)
+    betting_status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.match_id
@@ -51,9 +58,23 @@ class Match(models.Model):
         return multipliers
 
     def save(self, *args, **kwargs):
-        self.match_id = str(self.match_pk) + "__" +  teams_abbrv[self.team1.name] + "__" + teams_abbrv[self.team2.name] 
+        self.match_id = str(self.match_pk) + "__" +  teams_abbrv[self.team1.name] + "__" + teams_abbrv[self.team2.name]
+        print("match_id : ", self.match_id)
+        print("match_pk : ", self.match_pk)           
         super().save(*args, **kwargs)
+        if str(self.match_pk) != self.match_id.split('_')[0]:
+            self.save()
     # team1_bet_amount
+
+
+# @receiver(post_save, sender=Match, dispatch_uid="Update_Match_id")
+# def update_stock(sender, instance, **kwargs):
+#     instance.match_id = str(instance.match_pk) + "__" +  teams_abbrv[instance.team1.name] + "__" + teams_abbrv[instance.team2.name]
+#     if str(instance.match_pk) != instance.match_id.split('_')[0]:
+#             print("match_id : ", instance.match_id)
+#             print("match_pk : ", instance.match_pk)
+#             instance.save()
+    
 
 class Bet(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
