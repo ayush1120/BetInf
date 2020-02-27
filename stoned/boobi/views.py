@@ -18,7 +18,7 @@ from boobi.models import Match
 def show_home(request):
     matches = Match.objects.all()
     for match in matches:
-        if match.team1.logo != :
+        if match.team1.logo != None:
             print(str(match.team1.logo.url))
             print(str(match.team1.logo.url))
     return render(request, 'index.html', {
