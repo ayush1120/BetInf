@@ -58,13 +58,10 @@ class Match(models.Model):
         return multipliers
 
     def save(self, *args, **kwargs):
-        self.match_id = str(self.match_pk) + "__" +  teams_abbrv[self.team1.name] + "__" + teams_abbrv[self.team2.name]
-        print("match_id : ", self.match_id)
-        print("match_pk : ", self.match_pk)           
+        self.match_id = str(self.match_pk) + "__" +  teams_abbrv[self.team1.name] + "__" + teams_abbrv[self.team2.name]         
         super().save(*args, **kwargs)
-        if str(self.match_pk) != self.match_id.split('_')[0]:
-            self.save()
-    # team1_bet_amount
+        # if str(self.match_pk) != self.match_id.split('_')[0]:
+        #     self.save()
 
 
 # @receiver(post_save, sender=Match, dispatch_uid="Update_Match_id")
@@ -97,6 +94,8 @@ class Bet(models.Model):
 
         team = self.team.name
         multipliers = get_odds(self.match.team1_amount, self.match.team2_amount)
+        print(self.amount, self.team.name)
+        print(self.match.match_id, self.match.team1_amount, self.match.team2_amount, multipliers)
         if team==team1:
             self.multiplier = multipliers[0]
             my_match = self.match

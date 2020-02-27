@@ -7,6 +7,8 @@ import shutil
 import random
 import django
 
+random.seed(69)
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "stoned.settings")
 django.setup()
 
@@ -67,8 +69,10 @@ def add_data():
         team2_amount = random.randint(300, 600)
         sport = Sport.objects.get(name=random.choice(sports))
         a = Match(team1=team1, team2=team2, team1_amount=team1_amount, match_serial=serial, team2_amount=team2_amount, active=active, betting_status=betting, sport=sport)
-        serial += 1
         a.save()
+        prev_match = Match.objects.get(match_serial=serial)
+        prev_match.save()
+        serial += 1
         my_matches.append(a)
         if a.betting_status==True:
             my_betting_matches.append(a)
