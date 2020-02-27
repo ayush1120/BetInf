@@ -27,7 +27,9 @@ urlpatterns = [
     path('bet', views.show_bet_form, name='bet'),
     path('confirm', views.show_confirm_form, name='confirm'),
     path('updateScores', views.updateMatch, name = "updateMatch"),
+    path('signin', views.signIn, name= "signin")
     path('', views.show_home, name = 'home'),
+    
 
     
 ]

@@ -38,6 +38,13 @@ def show_bet_form(request):
         'match' : match
     })
 
+
+def signIn(request):
+    if request.method=='POST':
+        pass
+    return render(request, 'signin.html')
+
+
 @csrf_exempt
 def updateMatch(request):
     matches = Match.objects.all()
