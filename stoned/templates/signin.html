@@ -28,7 +28,7 @@
           <div class="card darken-1 center-align">
             <div class="card-content">
 
-              <h2 class="header center orange-text">Sign in</h2>
+              <h2 class="header center orange-text">Login</h2>
               <form id="Make_bet" action="{% url 'confirm' %}" enctype="multipart/form-data" method='POST'>
                 {% csrf_token %}
                 <input type="hidden" name="match_pk" value="{{match.match_pk}}">
@@ -37,7 +37,7 @@
                     <div class="row">
                       <div class="col m4"></div>
                       <div class="input-field col m4">
-                        <input placeholder="11740690" id="first_name" name="roll_no" type="text" class="validate">
+                        <input  id="first_name" name="roll_no" type="text" class="validate">
                         <label for="first_name">Username</label>
                       </div>
                       <div class="col m4"></div>
@@ -52,7 +52,7 @@
                     </div>
                     <div class="row">
                       
-                      <button type="submit" form="Make_bet" class="waves-effect waves-light btn">Next</button>
+                      <button type="submit" form="Make_bet" class="waves-effect waves-light btn">Sign in</button>
                     </div>
                   </div>
                 </div>
