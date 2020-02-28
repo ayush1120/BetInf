@@ -176,6 +176,16 @@ def user_access_level(request):
         out_dict["scout"] = True
     return out_dict
 
+@csrf_exempt
+def add_match(request):
+    if user_access_level(request)['admin'] == False:
+        return redirect('home')
+    teams = Team.objects.all()
+    sports = Sport.objects.all()
+    return render(request, 'make_match.html', {
+        "teams" : teams,
+        "sports" : sports
+    })
 
 def loda(request):
     lol = user_access_level(request)

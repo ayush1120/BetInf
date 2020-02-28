@@ -108,6 +108,7 @@
               </div>
               
               {% for set in sets|matchsets:match.match_pk %}
+              <div class="divider"></div>
               <h5>{{set}}</h5>
               <div class="row">
                 <div class="col s5">
@@ -137,10 +138,10 @@
                   </div>
                 </div>
               </div>
-              <div class="divider"></div>
               {% endfor %}
-
-
+              <div class="divider"></div>
+              <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+        
 
               <div class="row">
                 <h5>Current Odds</h5>

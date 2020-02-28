@@ -31,6 +31,7 @@ urlpatterns = [
     path('signout', views.signOut, name= "signout"),
     path('loda', views.loda, name="loda"),
     path('placebet', views.place_bet, name="placebet"),
+    path('addmatch', views.add_match, name="addmatch"),
     path('', views.show_home, name = 'home'),
 
     
