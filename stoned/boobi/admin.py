@@ -14,8 +14,11 @@ class MatchAdmin(admin.ModelAdmin):
 class BetAdmin(admin.ModelAdmin):
     pass
 
+class SetAdmin(admin.ModelAdmin):
+    pass
 
 admin.site.register(Sport, SportAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Match, MatchAdmin)
 admin.site.register(Bet, BetAdmin)
+admin.site.register(Set, SetAdmin)

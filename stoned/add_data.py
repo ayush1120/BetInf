@@ -40,7 +40,7 @@ sports = ["Badminton", "Tennis", "Basketball"]
 
 def add_data():
     serial=1
-    User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', 'ayush')
+    User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', 'lol123lol')
 
     scout, _ = Group.objects.get_or_create(name="Scout")
     bookie, _ = Group.objects.get_or_create(name="Bookie")
@@ -54,7 +54,12 @@ def add_data():
     User.objects.create_user('scout3', 'scout3@iitbhilai.ac.in','24848445')
     scout3 = User.objects.get(username="scout3")
     scout3.groups.add(Group.objects.get(name="Scout"))
-    
+    User.objects.create_user('bookie1', 'bookie1@iitbhilai.ac.in','46899152')
+    User.objects.create_user('bookie2', 'bookie2@iitbhilai.ac.in','61531235')
+    bookie1 = User.objects.get(username="bookie1")
+    bookie1.groups.add(Group.objects.get(name="Bookie"))
+    bookie2 = User.objects.get(username="bookie2")
+    bookie2.groups.add(Group.objects.get(name="Bookie"))
     print("lol : ", bookie.name)
 
     
@@ -88,8 +93,8 @@ def add_data():
         a.logo.name = team_images[team]
         # a.logo.path = os.path.join(settings.MEDIA_ROOT, a.logo.name)
         a.save()
-    num_matches = random.randint(2, 5)
-    num_set = 3
+    num_matches = 0
+    num_set = 0
     my_matches = []
     my_betting_matches = []
     for i in range(num_matches):
@@ -123,7 +128,8 @@ def add_data():
         if a.betting_status==True:
             my_betting_matches.append(a)
     
-    num_bets = random.randint(2, 5)
+    # num_bets = random.randint(2, 5)
+    num_bets = 0
     if len(my_betting_matches)>0:
         for i in range(num_bets):
             match = random.choice(my_betting_matches)

@@ -182,16 +182,20 @@ def add_match(request):
         sport_name = request.POST.get('sport_name')
         team1_name = request.POST.get('team_name_1')
         team2_name = request.POST.get('team_name_2')
+        amount_team1 = request.POST.get('team1_amount')
+        amount_team2 = request.POST.get('team2_amount')
         new_match = Match()
         print(request.POST)
         new_match.sport = Sport.objects.get(name=sport_name)
         new_match.team1 = Team.objects.get(name=team1_name)
         new_match.team2 = Team.objects.get(name=team2_name)
-        new_match.team1_amount = 500
-        new_match.team2_amount = 500
+        new_match.team1_amount = amount_team1
+        new_match.team2_amount = amount_team2
         active = True
         betting_status = True
         new_match.save()
+        curr_match = Match.objects.get(team1=new_match.team1, team2=new_match.team2, sport=new_match.sport)
+        curr_match.save()
         return redirect('home')
     if user_access_level(request)['admin'] == False:
         return redirect('home')
@@ -205,6 +209,13 @@ def add_match(request):
 
 @csrf_exempt
 def add_set(request):
+    matches = Match.objects.all()
+    # for match in matches:
+    #     if match.team1.logo != None:
+    #         print(str(match.team1.logo.url))
+    #         print(str(match.team1.logo.url))
+    user_group = user_access_level(request)
+    sets = Set.objects.all().order_by('datetime')
     if user_access_level(request)['scout'] == False:
         return redirect('home')
     match = Match.objects.get(match_pk=int(request.POST.get('match_pk')))
@@ -214,7 +225,11 @@ def add_set(request):
     new_set.team1 = Team.objects.get(name=match.team1.name)
     new_set.team2 = Team.objects.get(name=match.team2.name)
     new_set.save()
-    return redirect('home')
+    return render(request, 'index.html', {
+        'matches': matches,
+        'sets': sets,
+        'user_group': user_group,
+    })
 
 
 def loda(request):

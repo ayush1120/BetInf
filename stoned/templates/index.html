@@ -60,9 +60,9 @@
           <input type="hidden" name="team_num" value="2">
           <input type="hidden" name="inc" value="0">
         </form>
-        <form  id=" {{ match.match_pk|addstr:"add_set" }} " action="{% url 'addset' %}"
-          enctype="multipart/form-data" method="POST">
-          <input type="hidden" name='match_pk', value="{{match.match_pk}}">
+        <form id="{{ match.match_pk|addstr:'add_set' }}" action="{% url 'addset' %}" enctype="multipart/form-data"
+          method="POST">
+          <input type="hidden" name='match_pk' , value="{{match.match_pk}}">
         </form>
         {% endfor %}
         {% endif %}
@@ -72,7 +72,6 @@
           <input type="hidden" name="match_pk" value="{{match.match_pk}}">
         </form>
         {% endif %}
-        
         <div class="col m6 s12">
           <div class="card darken-1 center-align">
             <div class="card-content">
@@ -111,7 +110,7 @@
               <div class="row">
                 <h4 class="orange-text">Score</h4>
               </div>
-              
+
               {% for set in sets|matchsets:match.match_pk %}
               <div class="divider"></div>
               <h5>{{set}}</h5>
@@ -147,13 +146,13 @@
               <div class="divider"></div>
               <br>
               {% if user_group.scout %}
-              <button type="submit" form=" {{ match.match_pk|addstr:"add_set" }} "
+              <button type="submit" form="{{ match.match_pk|addstr:'add_set' }}"
                 class="btn-floating btn-large waves-effect waves-light red">+</button>
               {% endif  %}
-        
+
 
               <div class="row">
-                <h5>Current Odds</h5>
+                <h5>Current Odds*</h5>
               </div>
               <div class="row orange-text ">
                 <div class="col s5">
@@ -189,6 +188,7 @@
         <div class="col l6 s12">
           <h5 class="white-text">Disclaimer</h5>
           <p class="grey-text text-lighten-4">Please read all the terms and conditions before placing your bets.</p>
+          <p class="grey-text text-lighten-4">Odds may be different. Contact our representatives for more details.</p>
         </div>
       </div>
     </div>
