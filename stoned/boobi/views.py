@@ -106,11 +106,12 @@ def updateMatch(request):
     print("team2 : ", curr_set.team2_score)
     user_group = user_access_level(request)
 
-    return render(request, 'index.html', {
-        'matches': matches,
-        'sets': sets,
-        'user_group': user_group,
-    })
+    return redirect('home')
+    # render(request, 'index.html', {
+    #     'matches': matches,
+    #     'sets': sets,
+    #     'user_group': user_group,
+    # })
 
 @csrf_exempt
 def place_bet(request):
@@ -196,6 +197,13 @@ def add_match(request):
         new_match.save()
         curr_match = Match.objects.get(team1=new_match.team1, team2=new_match.team2, sport=new_match.sport)
         curr_match.save()
+        new_set = Set()
+        match = Match.objects.get(match_pk=curr_match.match_pk)
+        new_set.match = match
+        new_set.sport = Sport.objects.get(name=match.sport.name)
+        new_set.team1 = Team.objects.get(name=match.team1.name)
+        new_set.team2 = Team.objects.get(name=match.team2.name)
+        new_set.save()
         return redirect('home')
     if user_access_level(request)['admin'] == False:
         return redirect('home')

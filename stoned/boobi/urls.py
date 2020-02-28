@@ -34,10 +34,6 @@ urlpatterns = [
     path('addmatch', views.add_match, name="addmatch"),
     path('addset', views.add_set, name='addset'),
     path('', views.show_home, name = 'home'),
-
-    
-    
-
     
 ]
 
