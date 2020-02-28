@@ -18,7 +18,7 @@
     enctype="multipart/form-data" method='POST'>
     <input type="hidden" name="match_pk" value="{{bet.match_pk}}">
   </form>
-  <form id="submitBet" action="{% url 'confirm' %}"
+  <form id="submitBet" action="{% url 'placebet' %}"
     enctype="multipart/form-data" method='POST'>
     <input type="hidden" name="match_pk" value="{{bet.match_pk}}">
     <input type="hidden" name="roll_no" value="{{bet.roll_no}}">

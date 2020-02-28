@@ -108,7 +108,7 @@ def updateMatch(request):
     })
 
 @csrf_exempt
-def show_confirm_form(request):
+def place_bet(request):
     if not request.user.is_authenticated:
         return redirect('home')
 
@@ -117,10 +117,17 @@ def show_confirm_form(request):
         roll_no = int(request.POST.get("roll_no"))
         team_name = str(request.POST.get("team_name"))
         amount = int(request.POST.get("amount"))
-        match = match.objects.get(match_pk=match_pk)
+        match = Match.objects.get(match_pk=match_pk)
         team = Team.objects.get(name=team_name)
         bet = Bet(match=match, roll_no=roll_no, team=team, amount=amount)
         bet.save()
+    
+    return redirect('home')
+
+@csrf_exempt
+def show_confirm_form(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
 
     match_pk = int(request.POST.get("match_pk"))
     roll_no = int(request.POST.get("roll_no"))

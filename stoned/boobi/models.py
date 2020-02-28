@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from boobi.includes.bett import water_down, get_odds
-
+from boobi.includes.dump_csv import dump_bet
 # Create your models here.
 
 teams_abbrv = {
@@ -113,6 +113,8 @@ class Bet(models.Model):
     
     def save(self, *args, **kwargs):
         self.place_bet()
+        data = [str(self.roll_no), str(self.match.match_pk), str(self.match.match_id), str(self.team.name), str(self.amount), str(round(self.amount*self.multiplier,2))]
+        dump_bet(data, self.match.match_id)
         super().save(*args, **kwargs) 
             
 

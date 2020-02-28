@@ -106,6 +106,7 @@ def looper(m_id, team1, team2, x, y):
             get_prof(x,y,bets,1)
             return
 
+
 if __name__ == "__main__":
     m_id = input("Enter Match ID : ")
     team1 = input("Enter First Team name : ")

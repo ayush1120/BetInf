@@ -30,7 +30,9 @@ urlpatterns = [
     path('signin', views.signIn, name= "signin"),
     path('signout', views.signOut, name= "signout"),
     path('loda', views.loda, name="loda"),
+    path('placebet', views.place_bet, name="placebet"),
     path('', views.show_home, name = 'home'),
+
     
     
 
