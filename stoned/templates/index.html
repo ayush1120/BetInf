@@ -104,7 +104,7 @@
 
               </div>
               <div class="row">
-                <h3>Score</h3>
+                <h4 class="orange-text">Score</h4>
               </div>
               
               {% for set in sets|matchsets:match.match_pk %}
@@ -113,7 +113,7 @@
               <div class="row">
                 <div class="col s5">
                   <div class="row">
-                    <h4>{{set.team1_score}}</h4>
+                    <h4 class="light-blue-text">{{set.team1_score}}</h4>
                     {% if user_group.scout %}
                     <button type='submit' form="{{ set.set_pk|addstr:"inc_team1_score" }}"
                       class="waves-effect waves-light btn-small">+</button>
@@ -128,7 +128,7 @@
                 </div>
                 <div class="col s5">
                   <div class="row">
-                    <h4>{{set.team2_score}}</h4>
+                    <h4 class="light-blue-text">{{set.team2_score}}</h4>
                     {% if user_group.scout %}
                     <button type='submit' form="{{ set.set_pk|addstr:"inc_team2_score" }}"
                       class="waves-effect waves-light btn-small">+</button>
@@ -140,13 +140,14 @@
               </div>
               {% endfor %}
               <div class="divider"></div>
+              <br>
               <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
         
 
               <div class="row">
                 <h5>Current Odds</h5>
               </div>
-              <div class="row">
+              <div class="row orange-text ">
                 <div class="col s5">
                   <h4>{{match.get_multipliers.0}}</h4>
                 </div>
