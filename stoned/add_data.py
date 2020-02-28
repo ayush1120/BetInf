@@ -80,7 +80,7 @@ def add_data():
         # a.logo.path = os.path.join(settings.MEDIA_ROOT, a.logo.name)
         a.save()
     num_matches = random.randint(2, 5)
-    
+    num_set = 3
     my_matches = []
     my_betting_matches = []
     for i in range(num_matches):
@@ -101,6 +101,14 @@ def add_data():
         a.save()
         prev_match = Match.objects.get(match_serial=serial)
         prev_match.save()
+        for i in range(num_set):
+            myset = Set()
+            myset.match = Match.objects.get(match_serial=serial)
+            myset.sport = Sport.objects.get(name="Badminton")
+            myset.team1 = Team.objects.get(name=myset.match.team1.name)
+            myset.team2 = Team.objects.get(name=myset.match.team2.name)
+            myset.save()
+
         serial += 1
         my_matches.append(a)
         if a.betting_status==True:

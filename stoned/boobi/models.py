@@ -24,6 +24,7 @@ class Sport(models.Model):
     def __str__(self):
         return self.name
 
+
 class Team(models.Model):
     name = models.CharField(max_length=25, unique=True)
     logo = models.FileField(verbose_name="Team Logo", upload_to="team_logos/", null=True)
@@ -42,8 +43,7 @@ class Match(models.Model):
     datetime = models.DateTimeField(auto_now=True)
     team1_amount = models.FloatField(verbose_name="Amount Bet for Team 1", default=500)
     team2_amount = models.FloatField(verbose_name="Amount Bet for Team 2", default=500)
-    team1_score = models.IntegerField(verbose_name="Team 1 Score", default=0)
-    team2_score = models.IntegerField(verbose_name="Team 2 Score", default=0)
+    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="match_winner", blank=True, null=True)
     active = models.BooleanField(default=False)
     betting_status = models.BooleanField(default=False)
 
@@ -71,7 +71,40 @@ class Match(models.Model):
 #             print("match_id : ", instance.match_id)
 #             print("match_pk : ", instance.match_pk)
 #             instance.save()
-    
+
+
+class Set(models.Model):
+    set_pk =  models.AutoField(primary_key=True)
+    datetime = models.DateTimeField(auto_now=True)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
+    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team1")
+    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team2")
+    team1_score = models.IntegerField(verbose_name="Team 1 Score", default=0)
+    team2_score = models.IntegerField(verbose_name="Team 2 Score", default=0)
+    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_winner", blank=True, null=True)
+    active = models.BooleanField(default=False)
+    team1_wickets = models.IntegerField(default=0)
+    team2_wickets = models.IntegerField(default=0)
+    team1_overs = models.IntegerField(default=0)
+    team2_overs = models.IntegerField(default=0)
+    name = models.CharField(max_length=25, blank=True)
+
+    def declare_winner(self):
+        if self.team1_score>self.team2_score:
+            self.winner = self.team1
+        elif self.team1_score<self.team2_score:
+            self.winner = self.team2
+        self.save()
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        prev_sets = list(Set.objects.filter(match=Match.objects.get(match_pk=self.match.match_pk)))
+        if 'Set' not in self.name:
+            self.name = 'Set '+str(len(prev_sets)+1)
+        super().save(*args, **kwargs)
 
 class Bet(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
@@ -115,7 +148,4 @@ class Bet(models.Model):
         self.place_bet()
         data = [str(self.roll_no), str(self.match.match_pk), str(self.match.match_id), str(self.team.name), str(self.amount), str(round(self.amount*self.multiplier,2))]
         dump_bet(data, self.match.match_id)
-        super().save(*args, **kwargs) 
-            
-
-
+        super().save(*args, **kwargs)

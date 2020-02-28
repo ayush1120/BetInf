@@ -16,7 +16,7 @@ import signal
 import random
 import uuid
 from stoned.settings import BASE_DIR, STATICFILES_DIRS, MEDIA_URL
-from boobi.models import Match, Bet, Team
+from boobi.models import Match, Bet, Team, Set
 from boobi.includes.bett import water_down
 
 @csrf_exempt
@@ -27,8 +27,11 @@ def show_home(request):
     #         print(str(match.team1.logo.url))
     #         print(str(match.team1.logo.url))
     user_group = user_access_level(request)
+    sets = Set.objects.all().order_by('datetime')    
+
     return render(request, 'index.html', {
         'matches': matches,
+        'sets': sets,
         'user_group': user_group
     })
 
@@ -75,35 +78,37 @@ def signOut(request):
 @csrf_exempt
 def updateMatch(request):
     matches = Match.objects.all()
-    match_pk = int(request.POST.get("match_pk"))
+    sets = Set.objects.all().order_by('datetime') 
+    set_pk = int(request.POST.get("set_pk"))
     team_num = int(request.POST.get("team_num"))
     inc = int(request.POST.get("inc"))
-    print("match_pk : ", match_pk)
-    print("team_num : ", team_num)
-    print("inc : ", inc)
-    match = Match.objects.get(match_pk=match_pk)
+    # print("match_pk : ", match_pk)
+    # print("team_num : ", team_num)
+    # print("inc : ", inc)
+    curr_set = Set.objects.get(set_pk=set_pk)
     if team_num == 1:
         if inc == 1:
-            match.team1_score += 1
-            match.save()
+            curr_set.team1_score += 1
+            curr_set.save()
         else:
-            match.team1_score -= 1
-            match.save()
+            curr_set.team1_score -= 1
+            curr_set.save()
     else:
         if inc == 1:
-            match.team2_score += 1
-            match.save()
+            curr_set.team2_score += 1
+            curr_set.save()
         else:
-            match.team2_score -= 1
-            match.save()
+            curr_set.team2_score -= 1
+            curr_set.save()
 
     print("match : ")
-    print("team1 : ", match.team1_score)
-    print("team2 : ", match.team2_score)
+    print("team1 : ", curr_set.team1_score)
+    print("team2 : ", curr_set.team2_score)
     user_group = user_access_level(request)
 
     return render(request, 'index.html', {
         'matches': matches,
+        'sets': sets,
         'user_group': user_group,
     })
 

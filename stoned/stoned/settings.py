@@ -65,6 +65,7 @@ TEMPLATES = [
             ],
             'libraries':{
                 'addstr': 'boobi.templatetags.boobi_extras',
+                'matchsets': 'boobi.templatetags.boobi_extras',
 
             }
         },
