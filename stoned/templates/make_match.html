@@ -26,18 +26,17 @@
                         <div class="card-content">
 
                             <h2 class="header center orange-text">Create Match</h2>
-                            <form id="Make_bet" action="{% url 'confirm' %}" enctype="multipart/form-data"
-                                method='POST'>
-                                <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+                            <form id="make_match" action="{% url 'addmatch' %}"
+                            enctype="multipart/form-data" method="POST">
                                 <div class="row center-align">
                                     <div class="col s12">
                                         <div class="row">
                                             <div class="col m4"></div>
                                             <div class="input-field col m4">
-                                                <select name="team_name">
+                                                <select name="sport_name">
                                                     <option value="" disabled selected>Sport</option>
                                                     {% for sport in sports %}
-                                                    <option value="1">{{sport.name}}</option>
+                                                    <option value="{{sport.name}}">{{sport.name}}</option>
                                                     {% endfor %}
                                                 </select>
                                                 <label>Select Sport</label>
@@ -47,10 +46,10 @@
                                         <div class="row">
                                             <div class="col m4"></div>
                                             <div class="input-field col m4">
-                                                <select name="team_name">
+                                                <select name="team_name_1">
                                                     <option value="" disabled selected>Team</option>
                                                     {% for team in teams %}
-                                                    <option value="{{loop.index}}" selected>{{team.name}}</option>
+                                                    <option value="{{team.name}}" selected>{{team.name}}</option>
                                                     {% endfor %}
 
                                                 </select>
@@ -61,10 +60,10 @@
                                         <div class="row">
                                             <div class="col m4"></div>
                                             <div class="input-field col m4">
-                                                <select name="team_name">
+                                                <select name="team_name_2">
                                                     <option value="" disabled selected>Team</option>
                                                     {% for team in teams %}
-                                                    <option value="{{loop.index}}" selected>{{team.name}}</option>
+                                                    <option value="{{team.name}}" selected>{{team.name}}</option>
                                                     {% endfor %}
 
                                                 </select>
@@ -75,7 +74,7 @@
 
                                         <div class="row">
 
-                                            <button type="submit" form="Make_bet"
+                                            <button type="submit" form="make_match"
                                                 class="waves-effect waves-light btn">Add</button>
                                         </div>
                                     </div>

@@ -59,6 +59,10 @@
           <input type="hidden" name="team_num" value="2">
           <input type="hidden" name="inc" value="0">
         </form>
+        <form  id=" {{ match.match_pk|addstr:"add_set" }} " action="{% url 'addset' %}"
+          enctype="multipart/form-data" method="POST">
+          <input type="hidden" name='match_pk', value="{{match.match_pk}}">
+        </form>
         {% endfor %}
         {% endif %}
         {% if user_group.bookie %}
@@ -140,7 +144,11 @@
               </div>
               {% endfor %}
               <div class="divider"></div>
-              <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+              <br>
+              {% if user_group.scout %}
+              <button type="submit" form=" {{ match.match_pk|addstr:"add_set" }} "
+                class="btn-floating btn-large waves-effect waves-light red">+</button>
+              {% endif  %}
         
 
               <div class="row">

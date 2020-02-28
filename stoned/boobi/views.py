@@ -178,14 +178,44 @@ def user_access_level(request):
 
 @csrf_exempt
 def add_match(request):
+    if request.method == "POST":
+        sport_name = request.POST.get('sport_name')
+        team1_name = request.POST.get('team_name_1')
+        team2_name = request.POST.get('team_name_2')
+        new_match = Match()
+        print(request.POST)
+        new_match.sport = Sport.objects.get(name=sport_name)
+        new_match.team1 = Team.objects.get(name=team1_name)
+        new_match.team2 = Team.objects.get(name=team2_name)
+        new_match.team1_amount = 500
+        new_match.team2_amount = 500
+        active = True
+        betting_status = True
+        new_match.save()
+        return redirect('home')
     if user_access_level(request)['admin'] == False:
         return redirect('home')
     teams = Team.objects.all()
     sports = Sport.objects.all()
     return render(request, 'make_match.html', {
         "teams" : teams,
-        "sports" : sports
+        "sports" : sports,
     })
+
+
+@csrf_exempt
+def add_set(request):
+    if user_access_level(request)['scout'] == False:
+        return redirect('home')
+    match = Match.objects.get(match_pk=int(request.POST.get('match_pk')))
+    new_set = Set()
+    new_set.match = match
+    new_set.sport = Sport.objects.get(name=match.sport.name)
+    new_set.team1 = Team.objects.get(name=match.team1.name)
+    new_set.team2 = Team.objects.get(name=match.team2.name)
+    new_set.save()
+    return redirect('home')
+
 
 def loda(request):
     lol = user_access_level(request)

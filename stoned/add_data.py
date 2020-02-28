@@ -41,24 +41,33 @@ sports = ["Badminton", "Tennis", "Basketball"]
 def add_data():
     serial=1
     User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', 'ayush')
-    User.objects.create_user('mml', 'mml@boobi.com', 'mml123')
-    User.objects.create_user('sukhiya', 'sukhiya@boobi.com', 'sukhiya123')
-    bookie, _ = Group.objects.get_or_create(name="Bookie")
-    print("lol : ", bookie.name)
 
     scout, _ = Group.objects.get_or_create(name="Scout")
+    bookie, _ = Group.objects.get_or_create(name="Bookie")
 
-    bookie, _ = Group.objects.get_or_create(name="Bookie") 
+    User.objects.create_user('scout1', 'scout1@iitbhilai.ac.in','78524862')
+    scout1 = User.objects.get(username="scout1")
+    scout1.groups.add(Group.objects.get(name="Scout"))
+    User.objects.create_user('scout2', 'scout2@iitbhilai.ac.in','34512452')
+    scout2 = User.objects.get(username="scout2")
+    scout2.groups.add(Group.objects.get(name="Scout"))
+    User.objects.create_user('scout3', 'scout3@iitbhilai.ac.in','24848445')
+    scout3 = User.objects.get(username="scout3")
+    scout3.groups.add(Group.objects.get(name="Scout"))
     
-    mml = User.objects.get(username="mml")
-    sukhiya = User.objects.get(username="sukhiya")
+    print("lol : ", bookie.name)
+
+    
+
+    # bookie, _ = Group.objects.get_or_create(name="Bookie") 
+    # sukhiya = User.objects.get(username="sukhiya")
 
 
-    mml.groups.add(Group.objects.get(name="Bookie"))
-    mml.save()
+    # mml.groups.add(Group.objects.get(name="Bookie"))
+    # mml.save()
 
-    sukhiya.groups.add(Group.objects.get(name="Scout"))
-    sukhiya.save()
+    # sukhiya.groups.add(Group.objects.get(name="Scout"))
+    # sukhiya.save()
     # print("\n\nmml groups : ", mml.groups)
     # sukhiya.groups.add(scout)
     # sukhiya.save()
