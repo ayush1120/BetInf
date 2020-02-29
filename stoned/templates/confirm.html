@@ -21,7 +21,7 @@
   <form id="submitBet" action="{% url 'placebet' %}"
     enctype="multipart/form-data" method='POST'>
     <input type="hidden" name="match_pk" value="{{bet.match_pk}}">
-    <input type="hidden" name="roll_no" value="{{bet.roll_no}}">
+    <input type="hidden" name="phone_no" value="{{bet.phone_no}}">
     <input type="hidden" name="team_name" value="{{bet.team_name}}">
     <input type="hidden" name="amount" value="{{bet.amount}}">
     <input type="hidden" name="payout" value="{{bet.payout}}">
@@ -41,7 +41,7 @@
                       <tbody>
                         <tr>
                           <td>Roll No</td>
-                          <td>{{bet.roll_no}}</td>
+                          <td>{{bet.phone_no}}</td>
                         </tr>
                         <tr>
                           <td>Team</td>

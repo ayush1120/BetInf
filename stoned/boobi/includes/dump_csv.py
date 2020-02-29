@@ -9,7 +9,7 @@ def dump_bet(row, match_id):
     folder_name = "match" + str(match_id)
     folder_path = os.path.join(backup_path, folder_name)
     file_path = os.path.join(folder_path, "bets.csv")
-    head = ['datetime', 'roll_no', 'match_pk', 'match_id', 'team', 'amount', 'payout']
+    head = ['datetime', 'phone_no', 'match_pk', 'match_id', 'team', 'amount', 'payout']
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
         with open(file_path, 'w') as f:

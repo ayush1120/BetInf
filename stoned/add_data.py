@@ -44,23 +44,37 @@ def add_data():
 
     scout, _ = Group.objects.get_or_create(name="Scout")
     bookie, _ = Group.objects.get_or_create(name="Bookie")
+    healer, _ = Group.objects.get_or_create(name="Healer") 
+
 
     User.objects.create_user('scout1', 'scout1@iitbhilai.ac.in','78524862')
     scout1 = User.objects.get(username="scout1")
-    scout1.groups.add(Group.objects.get(name="Scout"))
     User.objects.create_user('scout2', 'scout2@iitbhilai.ac.in','34512452')
     scout2 = User.objects.get(username="scout2")
-    scout2.groups.add(Group.objects.get(name="Scout"))
     User.objects.create_user('scout3', 'scout3@iitbhilai.ac.in','24848445')
     scout3 = User.objects.get(username="scout3")
-    scout3.groups.add(Group.objects.get(name="Scout"))
     User.objects.create_user('bookie1', 'bookie1@iitbhilai.ac.in','46899152')
-    User.objects.create_user('bookie2', 'bookie2@iitbhilai.ac.in','61531235')
     bookie1 = User.objects.get(username="bookie1")
-    bookie1.groups.add(Group.objects.get(name="Bookie"))
+    User.objects.create_user('bookie2', 'bookie2@iitbhilai.ac.in','61531235')
     bookie2 = User.objects.get(username="bookie2")
+    User.objects.create_user('healer1', 'healer1@iitbhilai.ac.in','14565162')
+    healer1= User.objects.get(username="healer1")
+    User.objects.create_user('healer2', 'healer2@iitbhilai.ac.in','14435162')
+    healer2 = User.objects.get(username="healer2")
+    User.objects.create_user('mml', 'mml@iitbhilai.ac.in','dhkru9bzieh')
+    mml = User.objects.get(username="mml")
+    
+    
+    
+    scout1.groups.add(Group.objects.get(name="Scout"))
+    scout2.groups.add(Group.objects.get(name="Scout"))
+    scout3.groups.add(Group.objects.get(name="Scout"))
+    bookie1.groups.add(Group.objects.get(name="Bookie"))
     bookie2.groups.add(Group.objects.get(name="Bookie"))
-    print("lol : ", bookie.name)
+    healer1.groups.add(Group.objects.get(name="Healer"))
+    healer2.groups.add(Group.objects.get(name="Healer"))
+    mml.groups.add(Group.objects.get(name="Healer"))
+    mml.groups.add(Group.objects.get(name="Bookie"))
 
     
 
@@ -93,53 +107,7 @@ def add_data():
         a.logo.name = team_images[team]
         # a.logo.path = os.path.join(settings.MEDIA_ROOT, a.logo.name)
         a.save()
-    num_matches = 0
-    num_set = 0
-    my_matches = []
-    my_betting_matches = []
-    for i in range(num_matches):
-        team1 = Team.objects.get(name=random.choice(teams))
-        team2 = random.choice(teams)
-        while team2==team1.name:
-            team2 = random.choice(teams)
-        team2 = Team.objects.get(name=team2)
-        active = bool(random.randint(0, 1))
-        if active==True:
-            betting = bool(random.randint(0, 1))
-        else:
-            betting = False
-        team1_amount = random.randint(300, 600)
-        team2_amount = random.randint(300, 600)
-        sport = Sport.objects.get(name=random.choice(sports))
-        a = Match(team1=team1, team2=team2, team1_amount=team1_amount, match_serial=serial, team2_amount=team2_amount, active=active, betting_status=betting, sport=sport)
-        a.save()
-        prev_match = Match.objects.get(match_serial=serial)
-        prev_match.save()
-        for i in range(num_set):
-            myset = Set()
-            myset.match = Match.objects.get(match_serial=serial)
-            myset.sport = Sport.objects.get(name="Badminton")
-            myset.team1 = Team.objects.get(name=myset.match.team1.name)
-            myset.team2 = Team.objects.get(name=myset.match.team2.name)
-            myset.save()
-
-        serial += 1
-        my_matches.append(a)
-        if a.betting_status==True:
-            my_betting_matches.append(a)
     
-    # num_bets = random.randint(2, 5)
-    num_bets = 0
-    if len(my_betting_matches)>0:
-        for i in range(num_bets):
-            match = random.choice(my_betting_matches)
-            roll_no = random.randint(1174001, 1174120)*10
-            match_teams = [match.team1, match.team2]
-            team = match_teams[random.randint(0, 1)]
-            amount = random.randint(10, 20)*5
-            curr_match = Match.objects.get(match_serial=match.match_serial, betting_status=True)
-            bet = Bet(match=curr_match, roll_no=roll_no, team=team, amount=amount)
-            bet.save()
 
 if __name__ == "__main__":
     BASE_DIR = settings.BASE_DIR

@@ -23,146 +23,16 @@
       <!-- <h1 class="header center orange-text">BOOBI</h1> -->
       <img src="{% static "images/boobi_logo.png" %}" alt="Boobi logo">
       <div class="row center">
-        <h5 class="header col s12 light">IIT Bhilai's no.1 betting platform</h5>
+        <h5 class="header col s12 light">IIT Bhilai's no.1 Sports platform</h5>
       </div>
       <br><br>
-
     </div>
   </div>
 
   <div class="container">
     <div class="section">
       <div class="row">
-        {% for match in matches %}
-        {% if user_group.scout %}
-        {% for set in sets|matchsets:match.match_pk %}
-        <form id="{{ set.set_pk|addstr:"inc_team1_score" }}" action="{% url 'updateMatch' %}"
-          enctype="multipart/form-data" method='POST'>
-          <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-          <input type="hidden" name="team_num" value="1">
-          <input type="hidden" name="inc" value="1">
-        </form>
-        <form id="{{ set.set_pk|addstr:"dec_team1_score" }}" action="{% url 'updateMatch' %}"
-          enctype="multipart/form-data" method='POST'>
-          <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-          <input type="hidden" name="team_num" value="1">
-          <input type="hidden" name="inc" value="0">
-        </form>
-        <form id="{{ set.set_pk|addstr:"inc_team2_score" }}" action="{% url 'updateMatch' %}"
-          enctype="multipart/form-data" method='POST'>
-          <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-          <input type="hidden" name="team_num" value="2">
-          <input type="hidden" name="inc" value="1">
-        </form>
-        <form id="{{ set.set_pk|addstr:"dec_team2_score" }}" action="{% url 'updateMatch' %}"
-          enctype="multipart/form-data" method='POST'>
-          <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-          <input type="hidden" name="team_num" value="2">
-          <input type="hidden" name="inc" value="0">
-        </form>
-        <form id="{{ match.match_pk|addstr:'add_set' }}" action="{% url 'addset' %}" enctype="multipart/form-data"
-          method="POST">
-          <input type="hidden" name='match_pk' , value="{{match.match_pk}}">
-        </form>
-        {% endfor %}
-        {% endif %}
-        {% if user_group.bookie %}
-        <form id="{{ match.match_pk|addstr:"make_bet" }}" action="{% url 'bet' %}" enctype="multipart/form-data"
-          method='POST'>
-          <input type="hidden" name="match_pk" value="{{match.match_pk}}">
-        </form>
-        {% endif %}
-        <div class="col m6 s12">
-          <div class="card darken-1 center-align">
-            <div class="card-content">
-              <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}} ({{match.sport}})</b></span>
-              <div class="row">
-                Status : <b class="green-text">Live</b>
-              </div>
-              {% if user_group.admin %}
-              <button type="submit" form="{{ match.match_pk|addstr:"make_bet" }}"
-                class="waves-effect waves-light btn red">Close</button>
-                <br>
-              {% endif %}
-              <br>
-              <div class="divider"></div>
-              <div class="row">
-                <div class="col s6">
-                  <img src="{{match.team1.logo.url}}" alt="" class="responsive-img">
-                </div>
-                <div class="col s6">
-                  <img src="{{match.team2.logo.url}}" alt="" class="responsive-img">
-                </div>
-
-              </div>
-              <div class="row">
-                <h4 class="orange-text">Score</h4>
-              </div>
-
-              {% for set in sets|matchsets:match.match_pk %}
-              <div class="divider"></div>
-              <h5>{{set}}</h5>
-              <div class="row">
-                <div class="col s5">
-                  <div class="row">
-                    <h4 class="light-blue-text">{{set.team1_score}}</h4>
-                    {% if user_group.scout %}
-                    <button type='submit' form="{{ set.set_pk|addstr:"inc_team1_score" }}"
-                      class="waves-effect waves-light btn-small">+</button>
-                    <button type='submit' form="{{ set.set_pk|addstr:"dec_team1_score" }}"
-                      class="waves-effect waves-light btn-small">-</button>
-                    {% endif %}
-
-                  </div>
-                </div>
-                <div class="col s2">
-                  <h4>:</h4>
-                </div>
-                <div class="col s5">
-                  <div class="row">
-                    <h4 class="light-blue-text">{{set.team2_score}}</h4>
-                    {% if user_group.scout %}
-                    <button type='submit' form="{{ set.set_pk|addstr:"inc_team2_score" }}"
-                      class="waves-effect waves-light btn-small">+</button>
-                    <button type='submit' form="{{ set.set_pk|addstr:"dec_team2_score" }}"
-                      class="waves-effect waves-light btn-small">-</button>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              {% endfor %}
-              <div class="divider"></div>
-              <br>
-              {% if user_group.scout %}
-              <button type="submit" form="{{ match.match_pk|addstr:'add_set' }}"
-                class="btn-floating btn-large waves-effect waves-light red">+</button>
-              {% endif  %}
-
-
-              <div class="row">
-                <h5>Current Odds*</h5>
-              </div>
-              <div class="row orange-text ">
-                <div class="col s5">
-                  <h4>{{match.get_multipliers.0}}</h4>
-                </div>
-                <div class="col s2">
-                  <h4>:</h4>
-                </div>
-                <div class="col s5">
-                  <h4>{{match.get_multipliers.1}}</h4>
-                </div>
-              </div>
-              {% if user_group.bookie %}
-              <button type="submit" form="{{ match.match_pk|addstr:"make_bet" }}"
-                class="waves-effect waves-light btn orange">Bet</button>
-              {% endif %}
-
-
-            </div>
-          </div>
-        </div>
-        {% endfor %}
+        {% include 'match_card.html' %}  
       </div>
     </div>
   </div>
