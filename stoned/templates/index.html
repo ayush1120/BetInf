@@ -23,7 +23,7 @@
       <!-- <h1 class="header center orange-text">BOOBI</h1> -->
       <img src="{% static "images/boobi_logo.png" %}" alt="Boobi logo">
       <div class="row center">
-        <h5 class="header col s12 light">IIT Bhilai's no.1 betting platform</h5>
+        <h5 class="header col s12 light">IIT Bhilai's no.1 sports platform</h5>
       </div>
       <br><br>
 
@@ -137,6 +137,9 @@
               <button type="submit" form="{{ match.match_pk|addstr:'add_set' }}"
                 class="btn-floating btn-large waves-effect waves-light red">+</button>
               {% endif  %}
+              <br>
+              <div class="divider"></div>
+              <br>
 
 
               <div class="row">
@@ -155,7 +158,7 @@
               </div>
               {% if user_group.bookie %}
               <button type="submit" form="{{ match.match_pk|addstr:"make_bet" }}"
-                class="waves-effect waves-light btn orange">Bet</button>
+                class="waves-effect waves-light btn orange">Play</button>
               {% endif %}
 
 
