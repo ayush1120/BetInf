@@ -32,7 +32,7 @@ urlpatterns = [
     path('loda', views.loda, name="loda"),
     path('placebet', views.place_bet, name="placebet"),
     path('addmatch', views.add_match, name="addmatch"),
-    path('addset', views.add_set, name='addset'),
+    path('addgame', views.add_game, name='addgame'),
     path('', views.show_home, name = 'home'),
 ]
 

@@ -91,24 +91,19 @@ class Match(models.Model):
         return [profit1, profit2]
 
 
-
-class Set(models.Model):
-    set_pk =  models.AutoField(primary_key=True)
+class Game(models.Model):
+    game_pk =  models.AutoField(primary_key=True)
     datetime = models.DateTimeField(auto_now=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
-    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team1")
-    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team2")
+    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="game_team1")
+    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="game_team2")
     team1_score = models.IntegerField(verbose_name="Team 1 Score", default=0)
     team2_score = models.IntegerField(verbose_name="Team 2 Score", default=0)
-    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_winner", blank=True, null=True)
+    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="game_winner", blank=True, null=True)
     active = models.BooleanField(default=False)
-    team1_wickets = models.IntegerField(default=0)
-    team2_wickets = models.IntegerField(default=0)
-    team1_overs = models.IntegerField(default=0)
-    team2_overs = models.IntegerField(default=0)
     name = models.CharField(max_length=25, blank=True)
-    set_num=models.IntegerField(blank=True, editable=False)
+    game_num=models.IntegerField(blank=True, editable=False)
 
     def declare_winner(self):
         if self.team1_score>self.team2_score:
@@ -122,11 +117,31 @@ class Set(models.Model):
 
     
     def save(self, *args, **kwargs):
-        prev_sets = list(Set.objects.filter(match=Match.objects.get(match_pk=self.match.match_pk)))
-        self.set_num =  len(prev_sets)+1
-        if 'Set' not in self.name:
-            self.name = 'Set '+str(len(prev_sets)+1)
+        prev_games = list(Game.objects.filter(match=Match.objects.get(match_pk=self.match.match_pk)))
+        self.game_num =  len(prev_games)+1
+        if 'Game' not in self.name:
+            self.name = 'Game '+str(len(prev_games)+1)
         super().save(*args, **kwargs)
+
+
+class Set(models.Model):
+    set_pk =  models.AutoField(primary_key=True)
+    datetime = models.DateTimeField(auto_now=True)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team1")
+    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team2")
+    team1_score = models.IntegerField(verbose_name="Team 1 Score", default=0)
+    team2_score = models.IntegerField(verbose_name="Team 2 Score", default=0)
+    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_winner", blank=True, null=True)
+    active = models.BooleanField(default=False)
+    team1_wickets = models.IntegerField(default=0)
+    team2_wickets = models.IntegerField(default=0)
+    team1_overs = models.IntegerField(default=0)
+    team2_overs = models.IntegerField(default=0)
+    name = models.CharField(max_length=25, blank=True)
+    game_num=models.IntegerField(blank=True, editable=False)
+
+
 
 class Bet(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)

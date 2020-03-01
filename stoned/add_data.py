@@ -92,9 +92,9 @@ def add_data():
     # sukhiya.save()
     
     
-    # scout.user_set.add(sukhiya)
+    # scout.user_game.add(sukhiya)
     # scout.save()
-    # bookie.user_set.add(mml)
+    # bookie.user_game.add(mml)
     # bookie.save()
     
     for sport in sports:

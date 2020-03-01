@@ -1,11 +1,11 @@
 {% load static %}
 {% load addstr %}
-{% load matchsets %}
+{% load matchgames %}
 
 
 
 {% if user_group.scout %}
-<form id="{{ match.match_pk|addstr:'add_set' }}" action="{% url 'addset' %}" enctype="multipart/form-data"
+<form id="{{ match.match_pk|addstr:'add_game' }}" action="{% url 'addgame' %}" enctype="multipart/form-data"
   method="POST">
   <input type="hidden" name='match_pk' , value="{{match.match_pk}}">
 </form>
@@ -19,8 +19,30 @@
 
 <div class="card darken-1 center-align">
   <div class="card-content">
-    <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}} ({{match.sport}})</b></span>
-    <h5>{{match.profit.0}} vs. {{match.profit.1}}</h5>
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s10">
+        <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}} ({{match.sport}})</b></span>
+        <h5>{{match.profit.0}} vs. {{match.profit.1}}</h5>
+      </div>
+      <div class="col s1">
+        <div class="right-align">
+          <!-- Dropdown Trigger -->
+          <a class='dropdown-trigger' href='#' data-target='dropdown1'><i class="material-icons">more_vert</i>
+          </a>
+
+          <!-- Dropdown Structure -->
+          <ul id='dropdown1' class='dropdown-content'>
+            <li><a href="#!">one</a></li>
+            <li><a href="#!">two</a></li>
+            <li class="divider" tabindex="-1"></li>
+            <li><a href="#!">three</a></li>
+            <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+            <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="row">
       Status : <b class="green-text">Live</b>
     </div>
@@ -44,24 +66,24 @@
       <h4 class="orange-text">Score</h4>
     </div>
 
-    {% if sets|matchsets:match.match_pk %}    
+    {% if games|matchgames:match.match_pk %}
     <div id="{{ match.match_pk|addstr:'carousel' }}" class="carousel carousel-slider center">
       <!-- <div class="carousel-fixed-item center">
         <a class="btn waves-effect white grey-text darken-text-2">button</a>
       </div> -->
-      {% for set in sets|matchsets:match.match_pk %}
+      {% for game in games|matchgames:match.match_pk %}
       <div class="carousel-item" href="#one!">
         {% include 'game_card.html' %}
       </div>
       {% endfor %}
     </div>
     {% else %}
-      <p>Game Has Not Started Yet</p>
+    <p>Game Has Not Started Yet</p>
     {% endif %}
     <div class="divider"></div>
     <br>
     {% if user_group.scout %}
-    <button type="submit" form="{{ match.match_pk|addstr:'add_set' }}"
+    <button type="submit" form="{{ match.match_pk|addstr:'add_game' }}"
       class="btn-floating btn-large waves-effect waves-light red">+</button>
     {% endif  %}
     <br>

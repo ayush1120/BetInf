@@ -16,7 +16,7 @@ import signal
 import random
 import uuid
 from stoned.settings import BASE_DIR, STATICFILES_DIRS, MEDIA_URL
-from boobi.models import Match, Bet, Team, Set
+from boobi.models import Match, Bet, Team, Game
 from boobi.includes.bett import water_down
 
 
@@ -28,11 +28,11 @@ def show_home(request):
     #         print(str(match.team1.logo.url))
     #         print(str(match.team1.logo.url))
     user_group = user_access_level(request)
-    sets = Set.objects.all().order_by('datetime')
+    games = Game.objects.all().order_by('datetime')
 
     return render(request, 'index.html', {
         'matches': matches,
-        'sets': sets,
+        'games': games,
         'user_group': user_group
     })
 
@@ -83,38 +83,38 @@ def signOut(request):
 @csrf_exempt
 def updateMatch(request):
     matches = Match.objects.all()
-    sets = Set.objects.all().order_by('datetime')
-    set_pk = int(request.POST.get("set_pk"))
+    games = Game.objects.all().order_by('datetime')
+    game_pk = int(request.POST.get("game_pk"))
     team_num = int(request.POST.get("team_num"))
     inc = int(request.POST.get("inc"))
     # print("match_pk : ", match_pk)
     # print("team_num : ", team_num)
     # print("inc : ", inc)
-    curr_set = Set.objects.get(set_pk=set_pk)
+    curr_game = Game.objects.get(game_pk=game_pk)
     if team_num == 1:
         if inc == 1:
-            curr_set.team1_score += 1
-            curr_set.save()
+            curr_game.team1_score += 1
+            curr_game.save()
         else:
-            curr_set.team1_score -= 1
-            curr_set.save()
+            curr_game.team1_score -= 1
+            curr_game.save()
     else:
         if inc == 1:
-            curr_set.team2_score += 1
-            curr_set.save()
+            curr_game.team2_score += 1
+            curr_game.save()
         else:
-            curr_set.team2_score -= 1
-            curr_set.save()
+            curr_game.team2_score -= 1
+            curr_game.save()
 
     print("match : ")
-    print("team1 : ", curr_set.team1_score)
-    print("team2 : ", curr_set.team2_score)
+    print("team1 : ", curr_game.team1_score)
+    print("team2 : ", curr_game.team2_score)
     user_group = user_access_level(request)
 
     return redirect('home')
     # render(request, 'index.html', {
     #     'matches': matches,
-    #     'sets': sets,
+    #     'games': games,
     #     'user_group': user_group,
     # })
 
@@ -227,26 +227,26 @@ def add_match(request):
 
 
 @csrf_exempt
-def add_set(request):
+def add_game(request):
     matches=Match.objects.all()
     # for match in matches:
     #     if match.team1.logo != None:
     #         print(str(match.team1.logo.url))
     #         print(str(match.team1.logo.url))
     user_group=user_access_level(request)
-    sets=Set.objects.all().order_by('datetime')
+    games=Game.objects.all().order_by('datetime')
     if user_access_level(request)['scout'] == False:
         return redirect('home')
     match=Match.objects.get(match_pk=int(request.POST.get('match_pk')))
-    new_set=Set()
-    new_set.match=match
-    new_set.sport=Sport.objects.get(name=match.sport.name)
-    new_set.team1=Team.objects.get(name=match.team1.name)
-    new_set.team2=Team.objects.get(name=match.team2.name)
-    new_set.save()
+    new_game=Game()
+    new_game.match=match
+    new_game.sport=Sport.objects.get(name=match.sport.name)
+    new_game.team1=Team.objects.get(name=match.team1.name)
+    new_game.team2=Team.objects.get(name=match.team2.name)
+    new_game.save()
     return render(request, 'index.html', {
         'matches': matches,
-        'sets': sets,
+        'games': games,
         'user_group': user_group,
     })
 

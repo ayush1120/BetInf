@@ -1,11 +1,11 @@
 from django import template
-from boobi.models import Match, Set
+from boobi.models import Match, Game
 register = template.Library()
 
 @register.filter
-def matchsets(sets, match_pk):
-    out_sets = Set.objects.all().filter(match=Match.objects.get(match_pk=match_pk)) 
-    return out_sets
+def matchgames(games, match_pk):
+    out_games = Game.objects.all().filter(match=Match.objects.get(match_pk=match_pk)) 
+    return out_games
 
 @register.filter
 def addstr(arg1, arg2):

@@ -67,9 +67,9 @@ def add_data():
     # sukhiya.save()
     
     
-    # scout.user_set.add(sukhiya)
+    # scout.user_game.add(sukhiya)
     # scout.save()
-    # bookie.user_set.add(mml)
+    # bookie.user_game.add(mml)
     # bookie.save()
     
     for sport in sports:
@@ -83,7 +83,7 @@ def add_data():
         # a.logo.path = os.path.join(settings.MEDIA_ROOT, a.logo.name)
         a.save()
     num_matches = random.randint(2, 5)
-    num_set = 0
+    num_game = 0
     my_matches = []
     my_betting_matches = []
     for i in range(num_matches):
@@ -103,13 +103,13 @@ def add_data():
         a = Match(team1=team1, team2=team2, team1_amount=team1_amount, team2_amount=team2_amount, active=active, betting_status=betting, sport=sport)
         a.save()
         match_pk = a.match_pk
-        for i in range(num_set):
-            myset = Set()
-            myset.match = Match.objects.get(match_pk=match_pk)
-            myset.sport = Sport.objects.get(name="Badminton")
-            myset.team1 = Team.objects.get(name=myset.match.team1.name)
-            myset.team2 = Team.objects.get(name=myset.match.team2.name)
-            myset.save()
+        for i in range(num_game):
+            mygame = Game()
+            mygame.match = Match.objects.get(match_pk=match_pk)
+            mygame.sport = Sport.objects.get(name="Badminton")
+            mygame.team1 = Team.objects.get(name=mygame.match.team1.name)
+            mygame.team2 = Team.objects.get(name=mygame.match.team2.name)
+            mygame.save()
 
         my_matches.append(a)
         if a.betting_status==True:

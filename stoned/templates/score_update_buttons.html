@@ -1,0 +1,20 @@
+{% load static %}
+{% load addstr %}
+{% load matchgames %}
+
+
+<div class="card-action">
+    <div class="row flex">
+        <div class="col s4">
+        <button type='submit' form="{{ game.game_pk|addstr:"inc_team1_score" }}"
+          class="waves-effect waves-light btn-small">+</button>
+        <button type='submit' form="{{ game.game_pk|addstr:"dec_team1_score" }}"
+          class="waves-effect waves-light btn-small">-</button>
+        </div>
+        <div class="col s4"></div>
+        <button type='submit' form="{{ game.game_pk|addstr:"inc_team2_score" }}"
+          class="waves-effect waves-light btn-small">+</button>
+        <button type='submit' form="{{ game.game_pk|addstr:"dec_team2_score" }}"
+          class="waves-effect waves-light btn-small">-</button>
+    </div>
+</div>
