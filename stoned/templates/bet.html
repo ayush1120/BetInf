@@ -6,7 +6,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
-  <title>Make Bet - Boobi</title>
+  <title>Make Play - Boobi</title>
 
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -16,16 +16,13 @@
 
 <body>
   {% include 'navbar.html' %}
-
-
   <div class="container">
     <div class="section">
       <div class="row">
         <div class="col s12">
           <div class="card darken-1 center-align">
             <div class="card-content">
-
-              <h2 class="header center orange-text">Make Bet</h2>
+              <h2 class="header center orange-text">Make Play</h2>
               <form id="Make_bet" action="{% url 'confirm' %}" enctype="multipart/form-data" method='POST'>
                 <input type="hidden" name="match_pk" value="{{match.match_pk}}">
                 <p>Match Description</p>
@@ -73,13 +70,11 @@
                 </div>
               </form>
             </div>
-
           </div>
         </div>
       </div>
     </div>
   </div>
-
 
   <footer class="page-footer orange">
     <div class="container">

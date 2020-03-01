@@ -12,3 +12,12 @@
 .icon-block .material-icons {
 	font-size: inherit;
 }
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.header-margin-fix {
+  margin-top: 0.912rem !important;
+}
