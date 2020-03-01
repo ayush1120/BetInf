@@ -16,6 +16,20 @@
 </head>
 
 <body>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      M.AutoInit();
+      var elems = document.querySelectorAll('.carousel');
+      var instances = M.Carousel.init(elems, options);
+    });
+
+
+  </script>
+
+
+
+
   {% include 'navbar.html' %}
   <div class="section no-pad-bot" id="index-banner">
     <div class="container center">
@@ -32,7 +46,12 @@
   <div class="container">
     <div class="section">
       <div class="row">
-        {% include 'match_card.html' %}  
+        {% for match in matches %}
+
+        <div class="col m6 s12">
+          {% include 'match_card.html' %}
+        </div>
+        {% endfor %}
       </div>
     </div>
   </div>

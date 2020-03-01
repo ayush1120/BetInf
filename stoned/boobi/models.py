@@ -100,6 +100,7 @@ class Set(models.Model):
     team1_overs = models.IntegerField(default=0)
     team2_overs = models.IntegerField(default=0)
     name = models.CharField(max_length=25, blank=True)
+    set_num=models.IntegerField(blank=True, editable=False)
 
     def declare_winner(self):
         if self.team1_score>self.team2_score:
@@ -111,9 +112,10 @@ class Set(models.Model):
     def __str__(self):
         return self.name
 
-
+    
     def save(self, *args, **kwargs):
         prev_sets = list(Set.objects.filter(match=Match.objects.get(match_pk=self.match.match_pk)))
+        self.set_num =  len(prev_sets)+1
         if 'Set' not in self.name:
             self.name = 'Set '+str(len(prev_sets)+1)
         super().save(*args, **kwargs)
