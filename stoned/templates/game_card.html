@@ -5,67 +5,90 @@
 
 {% if user_group.scout %}
 <form id="{{ set.set_pk|addstr:"inc_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
-  method='POST'>
-  <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-  <input type="hidden" name="team_num" value="1">
-  <input type="hidden" name="inc" value="1">
+    method='POST'>
+    <input type="hidden" name="set_pk" value="{{set.set_pk}}">
+    <input type="hidden" name="team_num" value="1">
+    <input type="hidden" name="inc" value="1">
 </form>
 <form id="{{ set.set_pk|addstr:"dec_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
-  method='POST'>
-  <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-  <input type="hidden" name="team_num" value="1">
-  <input type="hidden" name="inc" value="0">
+    method='POST'>
+    <input type="hidden" name="set_pk" value="{{set.set_pk}}">
+    <input type="hidden" name="team_num" value="1">
+    <input type="hidden" name="inc" value="0">
 </form>
 <form id="{{ set.set_pk|addstr:"inc_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
-  method='POST'>
-  <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-  <input type="hidden" name="team_num" value="2">
-  <input type="hidden" name="inc" value="1">
+    method='POST'>
+    <input type="hidden" name="set_pk" value="{{set.set_pk}}">
+    <input type="hidden" name="team_num" value="2">
+    <input type="hidden" name="inc" value="1">
 </form>
 <form id="{{ set.set_pk|addstr:"dec_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
-  method='POST'>
-  <input type="hidden" name="set_pk" value="{{set.set_pk}}">
-  <input type="hidden" name="team_num" value="2">
-  <input type="hidden" name="inc" value="0">
+    method='POST'>
+    <input type="hidden" name="set_pk" value="{{set.set_pk}}">
+    <input type="hidden" name="team_num" value="2">
+    <input type="hidden" name="inc" value="0">
 </form>
 {% endif %}
-<div class="card grey lighten-5">
-    <div class="card-content">
-        <h4 class=""><b>1:2</b></h4>
-        <div class="divider"></div>
-        <div class="row flex">
-            <div class="col s4">
-                <h4 class="">20</h4>
+<div class="container">
+    <div class="card grey lighten-5">
+        <div class="card-content header-margin-fix">
+            <div class="row">
+                <div class="col s2"></div>
+                <div class="col s8">
+                    <h4 class=""><b>1:2</b></h4>
+                </div>
+                <div class="col s2">
+                    <div class="right-align">
+                        <!-- Dropdown Trigger -->
+                        <a class='dropdown-trigger' href='#' data-target='dropdown1'><i class="material-icons">more_vert</i>
+                        </a>
+                        <!-- Dropdown Structure -->
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <li><a href="#!">one</a></li>
+                            <li><a href="#!">two</a></li>
+                            <li class="divider" tabindex="-1"></li>
+                            <li><a href="#!">three</a></li>
+                            <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+                            <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="col s4">
-                <h5 class="orange-text">Set 3/5</h5>
+            <div class="divider"></div>
+            <div class="row flex">
+                <div class="col s4">
+                    <h4 class="">20</h4>
+                </div>
+                <div class="col s4">
+                    <h5 class="orange-text">Set 3/5</h5>
+                </div>
+                <div class="col s4">
+                    <h4 class="">15</h4>
+                </div>
             </div>
-            <div class="col s4">
-                <h4 class="">15</h4>
+
+            <div class="row">
+                <h5>Game {{set.set_num}}/3</h5>
             </div>
         </div>
-        
-        <div class="row">
-            <h5>Game {{set.set_num}}/3</h5>
-        </div>
-    </div>
-    <div class="card-action">
-        <div class="row flex">
-            <div class="col s4">
-            {% if user_group.scout %}
-            <button type='submit' form="{{ set.set_pk|addstr:"inc_team1_score" }}"
-              class="waves-effect waves-light btn-small">+</button>
-            <button type='submit' form="{{ set.set_pk|addstr:"dec_team1_score" }}"
-              class="waves-effect waves-light btn-small">-</button>
-            {% endif %}
+        <div class="card-action">
+            <div class="row flex">
+                <div class="col s4">
+                    {% if user_group.scout %}
+                    <button type='submit' form="{{ set.set_pk|addstr:"inc_team1_score" }}"
+                        class="waves-effect waves-light btn-small">+</button>
+                    <button type='submit' form="{{ set.set_pk|addstr:"dec_team1_score" }}"
+                        class="waves-effect waves-light btn-small">-</button>
+                    {% endif %}
+                </div>
+                <div class="col s4"></div>
+                {% if user_group.scout %}
+                <button type='submit' form="{{ set.set_pk|addstr:"inc_team2_score" }}"
+                    class="waves-effect waves-light btn-small">+</button>
+                <button type='submit' form="{{ set.set_pk|addstr:"dec_team2_score" }}"
+                    class="waves-effect waves-light btn-small">-</button>
+                {% endif %}
             </div>
-            <div class="col s4"></div>
-            {% if user_group.scout %}
-            <button type='submit' form="{{ set.set_pk|addstr:"inc_team2_score" }}"
-              class="waves-effect waves-light btn-small">+</button>
-            <button type='submit' form="{{ set.set_pk|addstr:"dec_team2_score" }}"
-              class="waves-effect waves-light btn-small">-</button>
-            {% endif %}
         </div>
     </div>
 </div>
