@@ -62,24 +62,32 @@ class Match(models.Model):
     def profit(self):
         bets_team1 = Bet.objects.all().filter(match=Match.objects.get(match_pk=self.pk), team=Team.objects.get(name=self.team1.name)).exclude(nickname="boobi.boona")
         bets_team2 =  Bet.objects.all().filter(match=Match.objects.get(match_pk=self.pk), team=Team.objects.get(name=self.team2.name)).exclude(nickname="boobi.boona")
-        admin_bets_team1 = Bet.objects.all().filter(match=Match.objects.get(match_pk=self.pk), nickname="boobi.boona",  team=Team.objects.get(name=self.team1.name))
-        admin_bets_team2 = Bet.objects.all().filter(match=Match.objects.get(match_pk=self.pk), nickname="boobi.boona",  team=Team.objects.get(name=self.team2.name))
-        admin_team1_sum = 0
-        for bet in admin_bets_team1:
-            admin_team1_sum += bet.amount
-        amount1 = self.team1_amount - admin_team1_sum
-        admin_team2_sum = 0
-        for bet in admin_bets_team2:
-            admin_team2_sum += bet.amount
-        amount2 = self.team2_amount - admin_team2_sum
+        # admin_bets_team1 = Bet.objects.all().filter(match=Match.objects.get(match_pk=self.pk), nickname="boobi.boona",  team=Team.objects.get(name=self.team1.name))
+        # admin_bets_team2 = Bet.objects.all().filter(match=Match.objects.get(match_pk=self.pk), nickname="boobi.boona",  team=Team.objects.get(name=self.team2.name))
+        # admin_team1_sum = 0
+        # x=0
+        # for bet in admin_bets_team1:
+        #     admin_team1_sum += bet.amount
+        # amount1 = self.team1_amount - admin_team1_sum
+        # admin_team2_sum = 0
+        # for bet in admin_bets_team2:
+        #     admin_team2_sum += bet.amount
+        # amount2 = self.team2_amount - admin_team2_sum
         payout_team1 = 0
+        betamount_team1 = 0
         for bet in bets_team1:
             payout_team1 += round(bet.amount*bet.multiplier, 2)
-        profit1 = round(amount1 - payout_team1, 2)
+            betamount_team1 += round(bet.amount, 2)
+        
         payout_team2 = 0
-        for bet in bets_team1:
+        betamount_team2 = 0
+        for bet in bets_team2:
             payout_team2 += round(bet.amount*bet.multiplier, 2)
-        profit2 = round(amount2 - payout_team2, 2)
+            betamount_team2 += round(bet.amount, 2)
+        
+        profit1 = betamount_team1 + betamount_team2 - payout_team1
+        profit2 = betamount_team1 + betamount_team2 - payout_team2
+
         return [profit1, profit2]
 
 

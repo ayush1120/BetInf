@@ -16,7 +16,7 @@
 
 <body>
   <script>
-    $(document).ready(function () {
+    document.addEventListener('DOMContentLoaded', function () {
       M.AutoInit();
     });
   </script>
@@ -41,12 +41,18 @@
                         <input placeholder="changu_mangu" id="nicknamei" name="nickname" type="text" class="validate">
                         <label for="nicknamei">Nickname</label>
                       </div>
+                      <div class="col m4"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col m4"></div>
                       <div class="input-field col m4">
                         <input placeholder="69xxxxxx96" id="first_name" name="phone_no" type="text" class="validate">
                         <label for="first_name">Mobile No</label>
                       </div>
                       <div class="col m4"></div>
                     </div>
+                    
                     <div class="row">
                       <div class="col m4"></div>
                       <div class="input-field col m4">
@@ -68,7 +74,7 @@
                       <div class="col m4"></div>
                     </div>
                     <div class="row">
-                      
+
                       <button type="submit" form="Make_bet" class="waves-effect waves-light btn">Next</button>
                     </div>
                   </div>
@@ -103,7 +109,7 @@
   <script src="{% static "js/materialize.js" %}"></script>
   <script src="{% static "js/init.js" %}"></script>
 
-  
+
 </body>
 
 </html>
