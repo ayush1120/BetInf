@@ -80,8 +80,7 @@
     {% else %}
     <p>Game Has Not Started Yet</p>
     {% endif %}
-    <div class="divider"></div>
-    <br>
+    
     {% if user_group.scout %}
     <button type="submit" form="{{ match.match_pk|addstr:'add_game' }}"
       class="btn-floating btn-large waves-effect waves-light red">+</button>

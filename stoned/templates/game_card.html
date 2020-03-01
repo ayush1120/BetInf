@@ -4,29 +4,58 @@
 
 
 {% if user_group.scout %}
-  {% include 'score_update_forms.html' %}
+{% include 'score_update_forms.html' %}
 {% endif %}
-<div class="card grey lighten-5">
-    <div class="card-content">
-        <h4 class=""><b>1:2</b></h4>
-        <div class="divider"></div>
-        <div class="row flex">
-            <div class="col s4">
-                <h4 class="">20</h4>
-            </div>
-            <div class="col s4">
-                <h5 class="orange-text">Set 3/5</h5>
-            </div>
-            <div class="col s4">
-                <h4 class="">15</h4>
-            </div>
+<div class="container">
+  <div class="card grey lighten-5">
+    <div class="card-content header-margin-fix">
+      <div class="row">
+        <div class="col s2"></div>
+        <div class="col s8">
+          <h4 class=""><b>1:2</b></h4>
         </div>
-        
-        <div class="row">
-            <h5>Game {{game.game_num}}/3</h5>
+        <div class="col s2">
+          <div class="right-align">
+            <!-- Dropdown Trigger -->
+            <a class='dropdown-trigger' href='#' data-target='dropdown1'><i class="material-icons">more_vert</i>
+            </a>
+            <!-- Dropdown Structure -->
+            <ul id='dropdown1' class='dropdown-content'>
+              <li><a href="#!">one</a></li>
+              <li><a href="#!">two</a></li>
+              <li class="divider" tabindex="-1"></li>
+              <li><a href="#!">three</a></li>
+              <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+              <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+            </ul>
+          </div>
         </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row flex">
+        <div class="col s4">
+          <h4 class="">20</h4>
+        </div>
+        <div class="col s4">
+          <h5 class="orange-text">Set 3/5</h5>
+        </div>
+        <div class="col s4">
+          <h4 class="">15</h4>
+        </div>
+      </div>
+
+      <div class="row">
+        <h5>Game {{game.game_num}}/3</h5>
+      </div>
     </div>
-    {% if user_group.scout %}
+
+
+      <!-- {% if user_group.scout %}
       {% include 'score_update_buttons.html' %}
-    {% endif %}
+      {% endif %} -->
+    
+    
+  </div>
+  
+
 </div>
