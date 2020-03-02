@@ -49,16 +49,22 @@ def add_data():
 
     User.objects.create_user('scout1', 'scout1@iitbhilai.ac.in','78524862')
     scout1 = User.objects.get(username="scout1")
+    
     User.objects.create_user('scout2', 'scout2@iitbhilai.ac.in','34512452')
     scout2 = User.objects.get(username="scout2")
+    
     User.objects.create_user('scout3', 'scout3@iitbhilai.ac.in','24848445')
     scout3 = User.objects.get(username="scout3")
+    
     User.objects.create_user('bookie1', 'bookie1@iitbhilai.ac.in','46899152')
     bookie1 = User.objects.get(username="bookie1")
+    
     User.objects.create_user('bookie2', 'bookie2@iitbhilai.ac.in','61531235')
     bookie2 = User.objects.get(username="bookie2")
+    
     User.objects.create_user('healer1', 'healer1@iitbhilai.ac.in','14565162')
     healer1= User.objects.get(username="healer1")
+
     User.objects.create_user('healer2', 'healer2@iitbhilai.ac.in','14435162')
     healer2 = User.objects.get(username="healer2")
     User.objects.create_user('mml', 'mml@iitbhilai.ac.in','dhkru9bzieh')

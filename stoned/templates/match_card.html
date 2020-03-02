@@ -15,7 +15,7 @@
   <input type="hidden" name="match_pk" value="{{match.match_pk}}">
 </form>
 {% endif %}
-{% if user_group.admin %}
+{% if user_group.admin or user_group.healer %}
 <form id="{{ match.match_pk|addstr:'toogleBettingStatus' }}" action="{% url 'toogleBettingStatus' %}"
   enctype="multipart/form-data" method='POST'>
   {% csrf_token %}
@@ -29,6 +29,14 @@
 {% endif %}
 
 
+{% if user_group.bookie or user_group.healer %}
+<form id="{{ match.match_pk|addstr:'serveHealer' }}" action="{% url 'serveHealer' %}"
+  enctype="multipart/form-data" method='POST'>
+  {% csrf_token %}
+  <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+</form>
+{% endif %}
+
 
 
 <div class="card darken-1 center-align">
@@ -37,9 +45,8 @@
       <div class="col s1"></div>
       <div class="col s10">
         <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}} ({{match.sport}})</b></span>
-        <!-- <h5>{{match.profit.0}} vs. {{match.profit.1}}</h5> -->
       </div>
-      {% if user_group.scout %}
+      {% if user_group.scout or user_group.healer %}
       <div class="col s1">
         <div class="right-align">
           <!-- Dropdown Trigger -->
@@ -55,7 +62,7 @@
             </li>
             <li class="divider" tabindex="-1"></li>
             {% endif  %}
-            {% if user_group.admin %}
+            {% if user_group.admin or user_group.healer %}
             <li>
               <a href="javascript:{}"
                 onclick="document.getElementById('{{ match.match_pk|addstr:'toogleBettingStatus'}}').submit();">
@@ -74,6 +81,15 @@
                 {% else %}
                 Turn Match Live
                 {% endif %}
+              </a>
+            </li>
+            <li class="divider" tabindex="-1"></li>
+            {% endif %}
+            {% if user_group.bookie or user_group.healer %}
+            <li>
+              <a href="javascript:{}"
+                onclick="document.getElementById('{{ match.match_pk|addstr:'serveHealer' }}').submit();">
+                HeaL
               </a>
             </li>
             <li class="divider" tabindex="-1"></li>

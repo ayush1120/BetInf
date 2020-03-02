@@ -1,0 +1,136 @@
+{% load static %}
+{% load addstr %}
+{% load matchgames %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>Healer @Boobi|Boobi</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{% static "css/materialize.css" %}" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="{% static "css/style.css" %}" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+
+    <script>
+        var options = {}
+        document.addEventListener('DOMContentLoaded', function () {
+            M.AutoInit();
+            var elems = document.querySelectorAll('.carousel');
+            var instances = M.Carousel.init(elems, {
+                fullWidth: true,
+                indicators: false,
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems, options);
+        });
+    </script>
+
+
+
+
+    {% include 'navbar.html' %}
+    <div class="card darken-1 center-align">
+        <div class="card-content">
+            <div class="row">
+                <div class="col s12">
+                    <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}}
+                            ({{match.sport}})</b></span>
+                </div>
+            </div>
+            <br>
+            <div class="divider"></div>
+            <div class="row">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <div class="col s6">
+                                    <img src="{{match.team1.logo.url}}" alt="" class="responsive-img">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col s6">
+                                    <img src="{{match.team2.logo.url}}" alt="" class="responsive-img">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Profit</th>
+                            <td>{{profit.0}}</td>
+                            <td>{{profit.1}}</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <th>Current Odds</th>
+                            <td>{{odds.0}}</td>
+                            <td>{{odds.1}}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Real Bet</th>
+                            <td>{{bets_amount_team_1}}</td>
+                            <td>{{bets_amount_team_2}}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Admin Bet</th>
+                            <td>{{admin_bets_amount_team_1}}</td>
+                            <td>{{admin_bets_amount_team_2}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="divider"></div>
+            <div class="row">
+                
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+    <footer class="page-footer orange">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Disclaimer</h5>
+                    <p class="grey-text text-lighten-4">Please read all the terms and conditions before placing your
+                        bets.</p>
+                    <p class="grey-text text-lighten-4">Odds may be different. Contact our representatives for more
+                        details.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "js/materialize.js" %}"></script>
+    <script src="{% static  "js/init.js" %}"></script>
+
+</body>
+
+</html>

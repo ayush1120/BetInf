@@ -37,6 +37,9 @@ urlpatterns = [
     path('updatescores', views.updateScores, name='updatescores'),
     path('toogleBettingStatus', views.toogleMatchBettingStatus, name='toogleBettingStatus'),
     path('toogleMatchActiveStatus', views.toogleMatchActiveStatus, name='toogleMatchActiveStatus'),
+    path('deleteSet', views.deleteSet, name='deleteSet'),
+    path('deleteLastGame', views.deleteGame, name='deleteLastGame'),
+    path('serveHealer', views.serve_healer, name='serveHealer'),
     path('', views.show_home, name = 'home'),
 ]
 

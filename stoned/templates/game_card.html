@@ -10,6 +10,24 @@
 {% endif %}
 
 
+{% if user_group.scout %}
+<form id="{{ match.match_pk|addstr:'deleteSet' }}" action="{% url 'deleteSet' %}" enctype="multipart/form-data"
+  method="POST">
+  {% csrf_token %}
+  <input type="hidden" name='match_pk'  value="{{match.match_pk}}">
+  <input type="hidden" name='game_pk'  value="{{game.game_pk}}">
+</form>
+
+
+<form id="{{ game.game_pk|addstr:'deleteLastGame' }}" action="{% url 'deleteLastGame' %}" enctype="multipart/form-data"
+  method="POST">
+  {% csrf_token %}
+  <input type="hidden" name='match_pk' value="{{match.match_pk}}">
+  <input type="hidden" name='game_pk' value="{{game.game_pk}}">
+</form>
+{% endif %}
+
+
 <div class="container">
   <div class="card grey lighten-5">
     <div class="card-content header-margin-fix">
@@ -30,10 +48,18 @@
               <li><a href="javascript:{}"
                   onclick="document.getElementById('{{ game.game_pk|addstr:'addSet' }}').submit();">Add Set</a></li>
               <li class="divider" tabindex="-1"></li>
-              <li><a href="#!">Delete Set</a></li>
+              {% if game.num_sets %}
+              <li><a href="javascript:{}"
+                  onclick="document.getElementById('{{ match.match_pk|addstr:'deleteSet'}}').submit();">Delete Set</a>
+              </li>
+              {% endif %}
               <li class="divider" tabindex="-1"></li>
-              <li><a href="#!">Delete Game</a></li>
+              {% if game.game_num == match.num_games %}
+              <li><a href="javascript:{}"
+                  onclick="document.getElementById('{{ game.game_pk|addstr:'deleteLastGame' }}').submit();">Delete Game</a>
+              </li>
               <li class="divider" tabindex="-1"></li>
+              {% endif %}
               <li><a href="#!">Mark Game Ended</a></li>
               <li class="divider" tabindex="-1"></li>
               <li class="divider" tabindex="-1"></li>
@@ -69,7 +95,7 @@
       {% endif %}
 
       <div class="row">
-        <h5>Game {{game.game_num}}/{{match.num_games}}</h5>
+        <p style="font-weight: bold; font-size: large;">Game {{game.game_num}}</p>
       </div>
     </div>
   </div>

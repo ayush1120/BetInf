@@ -16,7 +16,7 @@ import signal
 import random
 import uuid
 from stoned.settings import BASE_DIR, STATICFILES_DIRS, MEDIA_URL
-from boobi.models import Match, Bet, Team, Game, Set
+from boobi.models import Match, Bet, Team, Game, Set, AdminBet
 from boobi.includes.bett import water_down
 
 
@@ -131,7 +131,7 @@ def place_bet(request):
         amount = int(request.POST.get("amount"))
         match = Match.objects.get(match_pk=match_pk)
         team = Team.objects.get(name=team_name)
-        bet = Bet(match=match, phone_no=phone_no, team=team, amount=amount)
+        bet = Bet(match=match, nickname=nickname, phone_no=phone_no, team=team, amount=amount)
         bet.save()
 
     return redirect('home')
@@ -160,7 +160,7 @@ def show_confirm_form(request):
         "payout": payout,
         "nickname": nickname,
     }
-
+    print("mybet  :  ", bet)
     return render(request, 'confirm.html', {
         "bet": bet
     })
@@ -188,7 +188,7 @@ def user_access_level(request):
     if request.user.groups.filter(name="Scout").exists():
         out_dict["scout"] = True
     if request.user.groups.filter(name="Healer").exists():
-        out_dict["scout"] = True
+        out_dict["healer"] = True
     return out_dict
 
 
@@ -209,10 +209,10 @@ def add_match(request):
         new_match.save()
         curr_match = Match.objects.get(match_pk=new_match.pk)
         nick = "boobi.boona"
-        phone = 6900000096
-        bet1 = Bet(match=curr_match, nickname=nick, phone_no=phone, team=Team.objects.get(name=team1_name), amount=amount_team1)
+        phone = 9600000069
+        bet1 = AdminBet(match=curr_match, nickname=nick, phone_no=phone, team=Team.objects.get(name=team1_name), amount=amount_team1)
         bet1.save()
-        bett2=Bet(match=curr_match, nickname=nick, phone_no=phone, team=Team.objects.get(name=team2_name), amount=amount_team2)
+        bett2=AdminBet(match=curr_match, nickname=nick, phone_no=phone, team=Team.objects.get(name=team2_name), amount=amount_team2)
         bett2.save()
         return redirect('home')
     if user_access_level(request)['admin'] == False:
@@ -302,7 +302,7 @@ def toogleMatchBettingStatus(request):
         return redirect('home')
     
     user_group = user_access_level(request)
-    if user_group['admin']:
+    if user_group['admin'] or user_group['healer']:
         if request.method == 'POST':
             match_pk = request.POST.get('match_pk')
             match=Match.objects.get(match_pk=match_pk)
@@ -316,7 +316,7 @@ def toogleMatchActiveStatus(request):
         return redirect('home')
     
     user_group = user_access_level(request)
-    if user_group['admin']:
+    if user_group['admin'] or user_group['healer']:
         if request.method == 'POST':
             match_pk = request.POST.get('match_pk')
             match=Match.objects.get(match_pk=match_pk)
@@ -324,3 +324,86 @@ def toogleMatchActiveStatus(request):
             match.save()
             return redirect('home')
     return redirect('home')
+
+
+def deleteSet(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    user_group = user_access_level(request)
+    if not user_group['scout']:
+        return redirect('home')
+    if request.method=='POST':
+        game_pk = int(request.POST.get("game_pk"))
+        game = Game.objects.get(game_pk=game_pk)
+        myset = Set.objects.get(game=game, set_num=game.num_sets)
+        myset.delete()
+        if Set.objects.filter(game=game, set_num=game.num_sets).exists():
+            old_set = Set.objects.get(game=game, set_num=game.num_sets)
+            old_set.ended = False
+            old_set.save()
+            if(old_set.team1_score>old_set.team2_score):
+                game.team1_score -= 1
+                game.save()
+            elif(old_set.team1_score<old_set.team2_score):
+                game.team2_score -= 1
+                game.save()
+        
+        return redirect('home')
+
+
+def deleteGame(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    user_group = user_access_level(request)
+    if not user_group['scout']:
+        return redirect('home')
+    if request.method=='POST':
+        game_pk = int(request.POST.get("game_pk"))
+        game = Game.objects.get(game_pk=game_pk)
+        game.delete()
+        
+        return redirect('home')
+
+
+def serve_healer(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    user_group = user_access_level(request)
+    if not (user_group['healer'] or user_group['bookie']):
+        return redirect('home')
+    if request.method=='POST':
+        match_pk = request.POST.get("match_pk")
+        match = Match.objects.get(match_pk=match_pk)
+        bets = Bet.objects.all().filter(match=match)
+        team1 = Team.objects.get(name=match.team1.name)
+        team2 = Team.objects.get(name=match.team2.name)
+        bets_team1 = bets.filter(team=team1)
+        bets_team2 = bets.filter(team=team2)
+        profit = match.profit
+        odds = match.get_multipliers
+        bets_amount_team_1 = 0
+        bets_amount_team_2 = 0
+        for bet in bets_team1:
+            bets_amount_team_1 += bet.amount
+        for bet in bets_team2:
+            bets_amount_team_2 += bet.amount
+        admin_bets_team1 = AdminBet.objects.filter(match=match, team=team1)
+        admin_bets_team2 = AdminBet.objects.filter(match=match, team=team2)
+        admin_bets_amount_team_1 = 0
+        admin_bets_amount_team_2 = 0
+        for bet in admin_bets_team1:
+            admin_bets_amount_team_1 += bet.amount
+        for bet in admin_bets_team2:
+            admin_bets_amount_team_2 += bet.amount
+
+
+        return render(request, 'healer_page.html', {
+            "profit":profit,
+            "odds":odds,
+            "bets_amount_team_1":bets_amount_team_1,
+            "bets_amount_team_2":bets_amount_team_2,
+            "admin_bets_amount_team_1":admin_bets_amount_team_1,
+            "admin_bets_amount_team_2":admin_bets_amount_team_2,
+            "match":match,
+            "bets":bets,
+        })

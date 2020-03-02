@@ -207,3 +207,48 @@ class Bet(models.Model):
         data = [str(self.phone_no), str(self.match.match_pk), str(self.match), str(self.team.name), str(self.amount), str(round(self.amount*self.multiplier,2))]
         dump_bet(data, self.match)
         super().save(*args, **kwargs)
+
+
+
+
+class AdminBet(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    bet_id = models.AutoField(primary_key=True, editable=False)
+    nickname = models.CharField(max_length=50, default='boobi.boona', blank=True)
+    phone_no = models.BigIntegerField(default=9600000069)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+    datetime = models.DateTimeField(auto_now_add=True)
+    multiplier = models.FloatField(default=1, editable=False)
+
+
+    def place_bet(self):
+        """
+            Places Bet, Updates Multipliers or Amount Placed per Team
+        """
+        team1 = self.match.team1.name
+        team2 = self.match.team2.name
+
+        team = self.team.name
+        multipliers = get_odds(self.match.team1_amount, self.match.team2_amount)
+        print(self.amount, self.team.name)
+        if team==team1:
+            self.multiplier = multipliers[0]
+            my_match = self.match
+            my_match.team1_amount += self.amount
+            my_match.save()
+        elif team == team2:
+            self.multiplier = multipliers[1]
+            my_match = self.match
+            my_match.team2_amount += self.amount
+            my_match.save()
+        else:
+            self.multiplier = 1
+
+        return self.multiplier
+
+    def save(self, *args, **kwargs):
+        self.place_bet()
+        data = [str(self.phone_no), str(self.match.match_pk), str(self.match), str(self.team.name), str(self.amount), str(round(self.amount*self.multiplier,2))]
+        dump_bet(data, self.match)
+        super().save(*args, **kwargs)
