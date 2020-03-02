@@ -19,13 +19,20 @@
 <body>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    var options = {}
+    document.addEventListener('DOMContentLoaded', function () {
       M.AutoInit();
       var elems = document.querySelectorAll('.carousel');
-      var instances = M.Carousel.init(elems, options);
+      var instances = M.Carousel.init(elems, {
+    fullWidth: true,
+    indicators: false,
+  });
     });
 
-
+    document.addEventListener('DOMContentLoaded', function () {
+      var elems = document.querySelectorAll('.dropdown-trigger');
+      var instances = M.Dropdown.init(elems, options);
+    });
   </script>
 
 
@@ -38,7 +45,7 @@
       <!-- <h1 class="header center orange-text">BOOBI</h1> -->
       <img src="{% static "images/boobi_logo.png" %}" alt="Boobi logo">
       <div class="row center">
-        <h5 class="header col s12 light">IIT Bhilai's no.1 sports platform</h5>
+        <h5 class="header col s12 light">भारतीय प्रौद्योगिकी संस्थान Sejbahar's No.1 Sports Platform</h5>
       </div>
       <br><br>
     </div>
@@ -48,7 +55,6 @@
     <div class="section">
       <div class="row">
         {% for match in matches %}
-
         <div class="col m6 s12">
           {% include 'match_card.html' %}
         </div>

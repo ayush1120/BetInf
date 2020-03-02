@@ -1,0 +1,29 @@
+{% load static %}
+{% load addstr %}
+{% load matchgames %}
+{% load set_team1_score %}
+{% load set_team2_score %}
+
+
+<form id="{{ game.game_pk|addstr:"updateScores" }}" action="{% url 'updatescores' %}" enctype="multipart/form-data"
+    method='POST'>
+    {% csrf_token %}
+    <input type="hidden" name="game_pk" value="{{game.game_pk}}">
+    <div class="row">
+        <div class="row">
+            <div class="col s3">
+                <h4><input name="team1_score" type="number" style="text-align:center;"
+                        value="{{ sets|set_team1_score:game }}"></h4>
+            </div>
+            <div class="col s6 input-field">
+                <div class="input-field">
+                    <button type="submit" form="{{ game.game_pk|addstr:'updateScores' }}" class="waves-effect waves-light btn-small">Update</button>
+                </div>
+            </div>
+            <div class="col s3">
+                <h4><input name="team2_score" type="number" style="text-align:center;"
+                        value="{{ sets|set_team2_score:game }}"></h4>
+            </div>
+        </div>
+    </div>
+</form>

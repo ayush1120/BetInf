@@ -16,7 +16,7 @@ import signal
 import random
 import uuid
 from stoned.settings import BASE_DIR, STATICFILES_DIRS, MEDIA_URL
-from boobi.models import Match, Bet, Team, Game
+from boobi.models import Match, Bet, Team, Game, Set
 from boobi.includes.bett import water_down
 
 
@@ -29,10 +29,12 @@ def show_home(request):
     #         print(str(match.team1.logo.url))
     user_group = user_access_level(request)
     games = Game.objects.all().order_by('datetime')
+    sets = Set.objects.all()
 
     return render(request, 'index.html', {
         'matches': matches,
         'games': games,
+        'sets': sets,
         'user_group': user_group
     })
 
@@ -62,10 +64,7 @@ def signIn(request):
             login(request, user)
             matches = Match.objects.all()
             user_group = user_access_level(request)
-            return render(request, 'index.html', {
-                'matches': matches,
-                'user_group': user_group
-            })
+            redirect('home')
         else:
             return redirect('signin')
 
@@ -244,13 +243,84 @@ def add_game(request):
     new_game.team1=Team.objects.get(name=match.team1.name)
     new_game.team2=Team.objects.get(name=match.team2.name)
     new_game.save()
-    return render(request, 'index.html', {
-        'matches': matches,
-        'games': games,
-        'user_group': user_group,
-    })
-
+    return redirect('home')
 
 def loda(request):
     lol=user_access_level(request)
     return JsonResponse(lol)
+
+
+
+
+@csrf_exempt
+def addSet(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    if request.method == "POST":
+        game_pk = request.POST.get("game_pk")
+        game = Game.objects.get(game_pk=game_pk)
+        if len(Set.objects.all().filter(game=game))>0:
+            old_set = Set.objects.get(game=game, set_num=game.num_sets)
+            old_set.ended = True
+            if(old_set.team1_score>old_set.team2_score):
+                game.team1_score += 1
+                game.save()
+            elif(old_set.team1_score<old_set.team2_score):
+                game.team2_score += 1
+                game.save()
+
+
+        myset = Set()  
+        myset.game = Game.objects.get(game_pk=game_pk)
+        myset.save()
+
+        return redirect('home')
+    return redirect('home')
+
+
+def updateScores(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    if request.method == "POST":
+        game_pk = request.POST.get("game_pk")
+        team1_score = int(request.POST.get("team1_score"))
+        team2_score = int(request.POST.get("team2_score"))
+        game = Game.objects.get(game_pk=game_pk)
+        myset = Set.objects.get(game=game, set_num=game.num_sets) 
+        myset.team1_score = team1_score
+        myset.team2_score = team2_score
+        print("team2_score : ", team2_score)
+        print("team1_score : ", team1_score)
+        myset.save()
+
+        return redirect('home')
+    return redirect('home')
+
+
+def toogleMatchBettingStatus(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    
+    user_group = user_access_level(request)
+    if user_group['admin']:
+        if request.method == 'POST':
+            match_pk = request.POST.get('match_pk')
+            match=Match.objects.get(match_pk=match_pk)
+            match.betting_status = not match.betting_status
+            match.save()
+            return redirect('home')
+    return redirect('home')
+
+def toogleMatchActiveStatus(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    
+    user_group = user_access_level(request)
+    if user_group['admin']:
+        if request.method == 'POST':
+            match_pk = request.POST.get('match_pk')
+            match=Match.objects.get(match_pk=match_pk)
+            match.active = not match.active
+            match.save()
+            return redirect('home')
+    return redirect('home')

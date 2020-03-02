@@ -66,7 +66,8 @@ TEMPLATES = [
             'libraries':{
                 'addstr': 'boobi.templatetags.boobi_extras',
                 'matchgames': 'boobi.templatetags.boobi_extras',
-
+                'set_team1_score': 'boobi.templatetags.boobi_extras',
+                'set_team2_score': 'boobi.templatetags.boobi_extras',
             }
         },
     },

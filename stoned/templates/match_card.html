@@ -15,6 +15,20 @@
   <input type="hidden" name="match_pk" value="{{match.match_pk}}">
 </form>
 {% endif %}
+{% if user_group.admin %}
+<form id="{{ match.match_pk|addstr:'toogleBettingStatus' }}" action="{% url 'toogleBettingStatus' %}"
+  enctype="multipart/form-data" method='POST'>
+  {% csrf_token %}
+  <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+</form>
+<form id="{{ match.match_pk|addstr:'toogleMatchActiveStatus' }}" action="{% url 'toogleMatchActiveStatus' %}"
+  enctype="multipart/form-data" method='POST'>
+  {% csrf_token %}
+  <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+</form>
+{% endif %}
+
+
 
 
 <div class="card darken-1 center-align">
@@ -23,33 +37,57 @@
       <div class="col s1"></div>
       <div class="col s10">
         <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}} ({{match.sport}})</b></span>
-        <h5>{{match.profit.0}} vs. {{match.profit.1}}</h5>
+        <!-- <h5>{{match.profit.0}} vs. {{match.profit.1}}</h5> -->
       </div>
+      {% if user_group.scout %}
       <div class="col s1">
         <div class="right-align">
           <!-- Dropdown Trigger -->
-          <a class='dropdown-trigger' href='#' data-target='dropdown1'><i class="material-icons">more_vert</i>
+          <a class='dropdown-trigger' data-target="{{'dropdown'|addstr:match}}"><i class="material-icons">more_vert</i>
           </a>
 
           <!-- Dropdown Structure -->
-          <ul id='dropdown1' class='dropdown-content'>
-            <li><a href="#!">one</a></li>
-            <li><a href="#!">two</a></li>
+          <ul id="{{'dropdown'|addstr:match}}" class='dropdown-content'>
+            {% if user_group.scout %}
+            <li>
+              <a href="javascript:{}"
+                onclick="document.getElementById('{{ match.match_pk|addstr:'add_game'}}').submit();">Add Game</a>
+            </li>
             <li class="divider" tabindex="-1"></li>
-            <li><a href="#!">three</a></li>
-            <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-            <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+            {% endif  %}
+            {% if user_group.admin %}
+            <li>
+              <a href="javascript:{}"
+                onclick="document.getElementById('{{ match.match_pk|addstr:'toogleBettingStatus'}}').submit();">
+                {% if match.betting_status %}
+                Turn Tokens Off
+                {% else %}
+                Turn Tokens On
+                {% endif %}
+              </a>
+            </li>
+            <li>
+              <a href="javascript:{}"
+                onclick="document.getElementById('{{ match.match_pk|addstr:'toogleMatchActiveStatus'}}').submit();">
+                {% if match.active %}
+                Turn Live Off
+                {% else %}
+                Turn Match Live
+                {% endif %}
+              </a>
+            </li>
+            <li class="divider" tabindex="-1"></li>
+            {% endif %}
+
           </ul>
         </div>
       </div>
+      {% endif %}
     </div>
+    {% if match.active %}
     <div class="row">
       Status : <b class="green-text">Live</b>
     </div>
-    {% if user_group.admin %}
-    <button type="submit" form="{{ match.match_pk|addstr:"make_bet" }}"
-      class="waves-effect waves-light btn red">Close</button>
-    <br>
     {% endif %}
     <br>
     <div class="divider"></div>
@@ -63,33 +101,29 @@
 
     </div>
     <div class="row">
-      <h4 class="orange-text">Score</h4>
+      <h4 class="orange-text">Score Card</h4>
     </div>
-
     {% if games|matchgames:match.match_pk %}
-    <div id="{{ match.match_pk|addstr:'carousel' }}" class="carousel carousel-slider center">
-      <!-- <div class="carousel-fixed-item center">
+    <div class="row">
+      <div id="{{ match.match_pk|addstr:'carousel' }}" class="carousel carousel-slider center">
+        <!-- <div class="carousel-fixed-item center">
         <a class="btn waves-effect white grey-text darken-text-2">button</a>
       </div> -->
-      {% for game in games|matchgames:match.match_pk %}
-      <div class="carousel-item" href="#one!">
-        {% include 'game_card.html' %}
+        {% for game in games|matchgames:match.match_pk reversed %}
+        <div>
+          <div class="carousel-item active" href="">
+            {% include 'game_card.html' %}
+          </div>
+        </div>
+
+        {% endfor %}
       </div>
-      {% endfor %}
+      {% else %}
+      <p>Game Has Not Started Yet</p>
+      {% endif %}
     </div>
-    {% else %}
-    <p>Game Has Not Started Yet</p>
-    {% endif %}
-    
-    {% if user_group.scout %}
-    <button type="submit" form="{{ match.match_pk|addstr:'add_game' }}"
-      class="btn-floating btn-large waves-effect waves-light red">+</button>
-    {% endif  %}
-    <br>
-    <div class="divider"></div>
-    <br>
 
-
+    {% if match.betting_status %}
     <div class="row">
       <h5>Current Odds*</h5>
     </div>
@@ -104,9 +138,14 @@
         <h4>{{match.get_multipliers.1}}</h4>
       </div>
     </div>
+
+    
     {% if user_group.bookie %}
-    <button type="submit" form="{{ match.match_pk|addstr:'make_bet' }}"
+    <div class="row">
+      <button type="submit" form="{{ match.match_pk|addstr:'make_bet' }}"
       class="waves-effect waves-light btn orange">Play</button>
+    </div>    
+    {% endif %}
     {% endif %}
 
   </div>

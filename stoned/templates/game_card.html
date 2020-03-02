@@ -1,61 +1,76 @@
 {% load static %}
 {% load addstr %}
 {% load matchgames %}
+{% load set_team1_score %}
+{% load set_team2_score %}
 
 
 {% if user_group.scout %}
 {% include 'score_update_forms.html' %}
 {% endif %}
+
+
 <div class="container">
   <div class="card grey lighten-5">
     <div class="card-content header-margin-fix">
       <div class="row">
         <div class="col s2"></div>
         <div class="col s8">
-          <h4 class=""><b>1:2</b></h4>
+          <h4 class=""><b>{{game.team1_score}}:{{game.team2_score}}</b></h4>
         </div>
+        {% if user_group.scout %}
         <div class="col s2">
           <div class="right-align">
             <!-- Dropdown Trigger -->
-            <a class='dropdown-trigger' href='#' data-target='dropdown1'><i class="material-icons">more_vert</i>
+            <a class='dropdown-trigger' href='#' data-target="{{'dropdown'|addstr:game.game_pk}}"><i
+                class="material-icons">more_horiz</i>
             </a>
             <!-- Dropdown Structure -->
-            <ul id='dropdown1' class='dropdown-content'>
-              <li><a href="#!">one</a></li>
-              <li><a href="#!">two</a></li>
+            <ul id="{{'dropdown'|addstr:game.game_pk}}" class='dropdown-content'>
+              <li><a href="javascript:{}"
+                  onclick="document.getElementById('{{ game.game_pk|addstr:'addSet' }}').submit();">Add Set</a></li>
               <li class="divider" tabindex="-1"></li>
-              <li><a href="#!">three</a></li>
-              <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-              <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+              <li><a href="#!">Delete Set</a></li>
+              <li class="divider" tabindex="-1"></li>
+              <li><a href="#!">Delete Game</a></li>
+              <li class="divider" tabindex="-1"></li>
+              <li><a href="#!">Mark Game Ended</a></li>
+              <li class="divider" tabindex="-1"></li>
+              <li class="divider" tabindex="-1"></li>
             </ul>
           </div>
         </div>
+        {% endif %}
       </div>
       <div class="divider"></div>
+      {% if game.num_sets > 0 %}
+
+
       <div class="row flex">
         <div class="col s4">
-          <h4 class="">20</h4>
+          <h4 class="">{{ sets|set_team1_score:game }}</h4>
         </div>
         <div class="col s4">
-          <h5 class="orange-text">Set 3/5</h5>
+          <h5 class="orange-text">Set {{game.num_sets}}</h5>
         </div>
         <div class="col s4">
-          <h4 class="">15</h4>
+          <h4 class="">{{ sets|set_team2_score:game }}</h4>
         </div>
       </div>
+
+      {% if user_group.scout %}
+      {% include 'set_score_update.html' %}
+      {% endif %}
+
+      {% else %}
+      <div class="row flex">
+        <p>Game has not Started Yet.</p>
+      </div>
+      {% endif %}
 
       <div class="row">
-        <h5>Game {{game.game_num}}/3</h5>
+        <h5>Game {{game.game_num}}/{{match.num_games}}</h5>
       </div>
     </div>
-
-
-      <!-- {% if user_group.scout %}
-      {% include 'score_update_buttons.html' %}
-      {% endif %} -->
-    
-    
   </div>
-  
-
 </div>

@@ -2,27 +2,37 @@
 {% load addstr %}
 {% load matchgames %}
 
+<form id="{{ game.game_pk|addstr:"addSet" }}" action="{% url 'addset' %}" enctype="multipart/form-data"
+  method='POST'>
+  {% csrf_token %}
+  <input type="hidden" name="game_pk" value="{{game.game_pk}}">
+</form>
+
 
 <form id="{{ game.game_pk|addstr:"inc_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
   method='POST'>
+  {% csrf_token %}
   <input type="hidden" name="game_pk" value="{{game.game_pk}}">
   <input type="hidden" name="team_num" value="1">
   <input type="hidden" name="inc" value="1">
 </form>
 <form id="{{ game.game_pk|addstr:"dec_team1_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
   method='POST'>
+  {% csrf_token %}       
   <input type="hidden" name="game_pk" value="{{game.game_pk}}">
   <input type="hidden" name="team_num" value="1">
   <input type="hidden" name="inc" value="0">
 </form>
 <form id="{{ game.game_pk|addstr:"inc_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
   method='POST'>
+  {% csrf_token %}           
   <input type="hidden" name="game_pk" value="{{game.game_pk}}">
   <input type="hidden" name="team_num" value="2">
   <input type="hidden" name="inc" value="1">
 </form>
 <form id="{{ game.game_pk|addstr:"dec_team2_score" }}" action="{% url 'updateMatch' %}" enctype="multipart/form-data"
   method='POST'>
+  {% csrf_token %}
   <input type="hidden" name="game_pk" value="{{game.game_pk}}">
   <input type="hidden" name="team_num" value="2">
   <input type="hidden" name="inc" value="0">

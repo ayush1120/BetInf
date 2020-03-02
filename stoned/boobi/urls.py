@@ -33,6 +33,10 @@ urlpatterns = [
     path('placebet', views.place_bet, name="placebet"),
     path('addmatch', views.add_match, name="addmatch"),
     path('addgame', views.add_game, name='addgame'),
+    path('addset', views.addSet, name='addset'),
+    path('updatescores', views.updateScores, name='updatescores'),
+    path('toogleBettingStatus', views.toogleMatchBettingStatus, name='toogleBettingStatus'),
+    path('toogleMatchActiveStatus', views.toogleMatchActiveStatus, name='toogleMatchActiveStatus'),
     path('', views.show_home, name = 'home'),
 ]
 

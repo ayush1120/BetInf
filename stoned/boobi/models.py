@@ -39,17 +39,23 @@ class Match(models.Model):
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team1")
     team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team2")
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
-    datetime = models.DateTimeField(auto_now=True)
+    datetime = models.DateTimeField(auto_now_add=True)
     team1_amount = models.FloatField(verbose_name="Amount Bet for Team 1", default=0.01)
     team2_amount = models.FloatField(verbose_name="Amount Bet for Team 2", default=0.01)
     winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="match_winner", blank=True, null=True)
     active = models.BooleanField(default=False)
     betting_status = models.BooleanField(default=False)
-    
+    ended = models.BooleanField(default=False)
 
     def __str__(self):
         kol = str(self.match_pk) + "__" +  teams_abbrv[self.team1.name] + "__" + teams_abbrv[self.team2.name]
         return kol
+    
+    @property
+    def num_games(self):
+        numg = len(list(Game.objects.all().filter(match=Match.objects.get(match_pk=self.match_pk))))
+        return numg
+
     @property
     def get_multipliers(self):
         """
@@ -93,7 +99,7 @@ class Match(models.Model):
 
 class Game(models.Model):
     game_pk =  models.AutoField(primary_key=True)
-    datetime = models.DateTimeField(auto_now=True)
+    datetime = models.DateTimeField(auto_now_add=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="game_team1")
@@ -102,8 +108,13 @@ class Game(models.Model):
     team2_score = models.IntegerField(verbose_name="Team 2 Score", default=0)
     winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="game_winner", blank=True, null=True)
     active = models.BooleanField(default=False)
-    name = models.CharField(max_length=25, blank=True)
-    game_num=models.IntegerField(blank=True, editable=False)
+    game_num=models.IntegerField(blank=True, editable=False, default=0)
+    
+    @property
+    def num_sets(self):
+        mysets = Set.objects.all().filter(game=Game.objects.get(game_pk=self.pk))
+        return len(mysets)
+
 
     def declare_winner(self):
         if self.team1_score>self.team2_score:
@@ -113,33 +124,42 @@ class Game(models.Model):
         self.save()
 
     def __str__(self):
-        return self.name
+        return (str(self.match) + "__Game__" +  str(self.game_num)) 
 
     
     def save(self, *args, **kwargs):
         prev_games = list(Game.objects.filter(match=Match.objects.get(match_pk=self.match.match_pk)))
-        self.game_num =  len(prev_games)+1
-        if 'Game' not in self.name:
-            self.name = 'Game '+str(len(prev_games)+1)
+        if not Game.objects.filter(game_pk=self.game_pk).exists():
+            self.game_num =  len(prev_games)+1
+
         super().save(*args, **kwargs)
 
 
 class Set(models.Model):
     set_pk =  models.AutoField(primary_key=True)
-    datetime = models.DateTimeField(auto_now=True)
+    datetime = models.DateTimeField(auto_now_add=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team1")
-    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_team2")
     team1_score = models.IntegerField(verbose_name="Team 1 Score", default=0)
     team2_score = models.IntegerField(verbose_name="Team 2 Score", default=0)
-    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="set_winner", blank=True, null=True)
-    active = models.BooleanField(default=False)
+    ended = models.BooleanField(default=False)
     team1_wickets = models.IntegerField(default=0)
     team2_wickets = models.IntegerField(default=0)
     team1_overs = models.IntegerField(default=0)
     team2_overs = models.IntegerField(default=0)
-    name = models.CharField(max_length=25, blank=True)
-    game_num=models.IntegerField(blank=True, editable=False)
+    set_num=models.IntegerField(blank=True, editable=False)
+
+
+
+    def __str___(self):
+        return str(self.game) + "__Set__" + str(self.set_num)
+
+    def save(self, *args, **kwargs):
+        prev_sets = list(Set.objects.filter(game=Game.objects.get(game_pk=self.game.game_pk)))
+        if not Set.objects.filter(set_pk=self.set_pk).exists():
+            self.set_num =  len(prev_sets)+1
+        super().save(*args, **kwargs)
+        
+
 
 
 
@@ -151,7 +171,7 @@ class Bet(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     amount = models.FloatField(default=0)
     multiplier = models.FloatField(default=1, editable=False)
-
+    datetime = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return str(self.bet_id)
