@@ -40,6 +40,8 @@ urlpatterns = [
     path('deleteSet', views.deleteSet, name='deleteSet'),
     path('deleteLastGame', views.deleteGame, name='deleteLastGame'),
     path('serveHealer', views.serve_healer, name='serveHealer'),
+    path('avStatusToogle', views.toogleAVStatus, name='avStatusToogle'),
+    path('healMatch', views.healMatch, name='healMatch'),
     path('', views.show_home, name = 'home'),
 ]
 

@@ -36,7 +36,7 @@ team_images = {"Battle Hawks" : os.path.join("team_logos", "Battle_Hawk.png"),
  "Vikings" : os.path.join("team_logos", "Vikings.png")
  }
 
-sports = ["Badminton", "Tennis", "Basketball"]
+sports = ["Badminton", "Tennis", "Basketball", "Vollyball"]
 
 def add_data():
     serial=1

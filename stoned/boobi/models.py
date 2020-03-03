@@ -176,6 +176,10 @@ class Bet(models.Model):
     def __str__(self):
         return str(self.bet_id)
 
+    @property
+    def payout(self):
+        return round(self.amount*self.multiplier, 2)
+
 
     def place_bet(self):
         """
@@ -249,6 +253,8 @@ class AdminBet(models.Model):
 
     def save(self, *args, **kwargs):
         self.place_bet()
-        data = [str(self.phone_no), str(self.match.match_pk), str(self.match), str(self.team.name), str(self.amount), str(round(self.amount*self.multiplier,2))]
-        dump_bet(data, self.match)
         super().save(*args, **kwargs)
+
+class AdminBetVapourizer(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)

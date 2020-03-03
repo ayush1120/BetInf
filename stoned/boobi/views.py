@@ -16,7 +16,7 @@ import signal
 import random
 import uuid
 from stoned.settings import BASE_DIR, STATICFILES_DIRS, MEDIA_URL
-from boobi.models import Match, Bet, Team, Game, Set, AdminBet
+from boobi.models import Match, Bet, Team, Game, Set, AdminBet, AdminBetVapourizer
 from boobi.includes.bett import water_down
 
 
@@ -35,7 +35,7 @@ def show_home(request):
         'matches': matches,
         'games': games,
         'sets': sets,
-        'user_group': user_group
+        'user_group': user_group,
     })
 
 
@@ -62,9 +62,7 @@ def signIn(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            matches = Match.objects.all()
-            user_group = user_access_level(request)
-            redirect('home')
+            return redirect('home')
         else:
             return redirect('signin')
 
@@ -214,6 +212,9 @@ def add_match(request):
         bet1.save()
         bett2=AdminBet(match=curr_match, nickname=nick, phone_no=phone, team=Team.objects.get(name=team2_name), amount=amount_team2)
         bett2.save()
+        av = AdminBetVapourizer()
+        av.match = Match.objects.get(match_pk=curr_match.match_pk)
+        av.save()
         return redirect('home')
     if user_access_level(request)['admin'] == False:
         return redirect('home')
@@ -374,7 +375,7 @@ def serve_healer(request):
     if request.method=='POST':
         match_pk = request.POST.get("match_pk")
         match = Match.objects.get(match_pk=match_pk)
-        bets = Bet.objects.all().filter(match=match)
+        bets = Bet.objects.all().filter(match=match).order_by('-datetime')
         team1 = Team.objects.get(name=match.team1.name)
         team2 = Team.objects.get(name=match.team2.name)
         bets_team1 = bets.filter(team=team1)
@@ -396,6 +397,7 @@ def serve_healer(request):
         for bet in admin_bets_team2:
             admin_bets_amount_team_2 += bet.amount
 
+        av = AdminBetVapourizer.objects.get(match=Match.objects.get(match_pk=match_pk))
 
         return render(request, 'healer_page.html', {
             "profit":profit,
@@ -406,4 +408,42 @@ def serve_healer(request):
             "admin_bets_amount_team_2":admin_bets_amount_team_2,
             "match":match,
             "bets":bets,
+            "bets_team1":bets_team1.count(),            
+            "bets_team2":bets_team2.count(),
+            "av":av
+
         })
+
+def toogleAVStatus(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    
+    user_group = user_access_level(request)
+    if user_group['admin'] or user_group['healer']:
+        if request.method == 'POST':
+            match_pk = request.POST.get('match_pk')
+            av = AdminBetVapourizer.objects.get(match=Match.objects.get(match_pk=match_pk))
+            av.status = not av.status 
+            av.save()
+            match = Match.objects.get(match_pk=match_pk)
+            return redirect('home')
+    return redirect('home')
+
+def healMatch(request):
+    if request.method=="POST":
+        match_pk = request.POST.get('match_pk')
+        odd = float(request.POST.get('odd'))
+        team_num = int(request.POST.get('team_num')) 
+        match = Match.objects.get(match_pk=match_pk)
+        av = AdminBetVapourizer.objects.get(match=Match.objects.get(match_pk=match_pk))
+        if av.status:
+            bets = Bet.objects.all().filter(match=match).order_by('-datetime')
+            team1 = Team.objects.get(name=match.team1.name)
+            team2 = Team.objects.get(name=match.team2.name)
+            bets_team1 = bets.filter(team=team1)
+            bets_team2 = bets.filter(team=team2)
+        else:
+            pass
+    return JsonResponse({
+        "everything":"OK"
+    })

@@ -17,28 +17,24 @@
 </head>
 
 <body>
-
     <script>
         var options = {}
         document.addEventListener('DOMContentLoaded', function () {
             M.AutoInit();
-            var elems = document.querySelectorAll('.carousel');
-            var instances = M.Carousel.init(elems, {
-                fullWidth: true,
-                indicators: false,
-            });
         });
-
         document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('.dropdown-trigger');
             var instances = M.Dropdown.init(elems, options);
         });
     </script>
 
-
-
-
     {% include 'navbar.html' %}
+    <form id="{{ match.match_pk|addstr:"toogleAVStatus" }}" action="{% url 'avStatusToogle' %}"
+        enctype="multipart/form-data" method='POST'>
+        {% csrf_token %}
+        <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+    </form>
+
     <div class="card darken-1 center-align">
         <div class="card-content">
             <div class="row">
@@ -51,7 +47,7 @@
             <div class="divider"></div>
             <div class="row">
 
-                <table>
+                <table class="striped ">
                     <thead>
                         <tr>
                             <th></th>
@@ -81,8 +77,8 @@
                         </tr>
                         <tr>
                             <th>Total Real Bet</th>
-                            <td>{{bets_amount_team_1}}</td>
-                            <td>{{bets_amount_team_2}}</td>
+                            <td>{{bets_amount_team_1}} ({{bets_team1}} Bets) </td>
+                            <td>{{bets_amount_team_2}} ({{bets_team2}} Bets)</td>
                         </tr>
                         <tr>
                             <th>Total Admin Bet</th>
@@ -93,43 +89,92 @@
                 </table>
             </div>
 
+            <div class="divider"></div>
+
+            <div class="row">
+                <h4>Heal</h4>
+            </div>
+            <div class="row" style="align-items:center;">
+                <div class="col s8" style="align-content: flex-end;">
+                    <div style="font-weight: bold;">
+                        <h5>Admin Token Vapourization : </h5>
+                    </div>
+                </div>
+                <div class="input-field col s4" style="align-content: flex-start;">
+                    <div>
+                        <button id="avbutton" form="{{ match.match_pk|addstr:"toogleAVStatus" }}"
+                            class="btn waves-effect waves-light" type="submit">
+                            {% if av.status %}
+                            Turn AV OFF
+                            {% else %}
+                            Turn AV ON
+                            {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <form id="{{ match.match_pk|addstr:"healMatch" }}" action="{% url 'healMatch' %}"
+                    enctype="multipart/form-data" method='POST'>
+                    {% csrf_token %}
+                    <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+                    <div class="input-field col s4">
+                        <input placeholder="1.4" min="1.00000" max="20.00000" name="odd" id="odds" type="number" step="0.1"
+                            class="validate">
+                        <label for="odds">Odds</label>
+                    </div>
+
+                    <div class=" input-field col s5">
+                        <select name="team_num">
+                            <option value="" disabled selected>Team</option>
+                            <option value="1" selected>{{match.team1.name}}</option>
+                            <option value="2" selected>{{match.team2.name}}</option>
+
+                        </select>
+                        <label>Select Team</label>
+                    </div>
+
+                    <div class="input-field col s3">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
 
             <div class="divider"></div>
             <div class="row">
-                
+                {% include 'recent_tokens.html' %}
             </div>
 
-
-
-
-
         </div>
-    </div>
 
-    <footer class="page-footer orange">
-        <div class="container">
-            <div class="row">
-                <div class="col l6 s12">
-                    <h5 class="white-text">Disclaimer</h5>
-                    <p class="grey-text text-lighten-4">Please read all the terms and conditions before placing your
-                        bets.</p>
-                    <p class="grey-text text-lighten-4">Odds may be different. Contact our representatives for more
-                        details.</p>
+        <footer class="page-footer orange">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">Disclaimer</h5>
+                        <p class="grey-text text-lighten-4">Please read all the terms and conditions before placing your
+                            bets.</p>
+                        <p class="grey-text text-lighten-4">Odds may be different. Contact our representatives for more
+                            details.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="footer-copyright">
-            <div class="container">
-                Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+            <div class="footer-copyright">
+                <div class="container">
+                    Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
 
 
-    <!--  Scripts-->
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="{% static "js/materialize.js" %}"></script>
-    <script src="{% static  "js/init.js" %}"></script>
+        <!--  Scripts-->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="{% static "js/materialize.js" %}"></script>
+        <script src="{% static  "js/init.js" %}"></script>
 
 </body>
 

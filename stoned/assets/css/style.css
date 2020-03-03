@@ -12,3 +12,28 @@
 .icon-block .material-icons {
 	font-size: inherit;
 }
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.header-margin-fix {
+  margin-top: 0.912rem !important;
+}
+
+@media only screen and (min-width: 601px) {
+  .container-card {
+    width: 85%;
+  }
+}
+
+@media only screen and (min-width: 993px) {
+  .container-card {
+    width: 85%;
+  }
+}
+
+.carousel.carousel-slider .carousel-item {
+  width: 90% !important;
+}
