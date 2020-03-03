@@ -40,7 +40,7 @@ sports = ["Badminton", "Tennis", "Basketball", "Vollyball"]
 
 def add_data():
     serial=1
-    User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', 'lol123lol')
+    User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', 'hesoyam1120')
 
     scout, _ = Group.objects.get_or_create(name="Scout")
     bookie, _ = Group.objects.get_or_create(name="Bookie")

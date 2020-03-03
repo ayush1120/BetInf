@@ -394,8 +394,8 @@ def serve_healer(request):
             "odds":odds,
             "bets_amount_team_1":bets_amount_team_1,
             "bets_amount_team_2":bets_amount_team_2,
-            "admin_bets_amount_team_1":admin_bets_amount_team_1,
-            "admin_bets_amount_team_2":admin_bets_amount_team_2,
+            "admin_bets_amount_team_1":round(admin_bets_amount_team_1,2),
+            "admin_bets_amount_team_2":round(admin_bets_amount_team_2,2),
             "match":match,
             "bets":bets,
             "bets_team1":bets_team1.count(),            
@@ -450,17 +450,17 @@ def heal_with_av(match, team_num, odd):
     match = Match.objects.get(match_pk=match.match_pk)
     if team_num == 1:
         req_odd = odd
-        curr_odd  = match.get_multipliers()[0]
+        curr_odd  = match.get_multipliers[0]
         if req_odd>curr_odd:
-            new_admin_bet_amount = (((req_odd-1)*match.team1_amount)/(1-CUT)) - match.team2_amount
+            new_admin_bet_amount = match.team1_amount*((req_odd - curr_odd)/(1-CUT))
             new_admin_bet = AdminBet()
-            admin_team = Team.objects.get(name=match.team1.name)
+            admin_team = Team.objects.get(name=match.team2.name)
             new_admin_bet.match = match
             new_admin_bet.amount = new_admin_bet_amount
             new_admin_bet.team = admin_team
             new_admin_bet.save()
-        else:
-            new_admin_bet_amount = (((req_odd-1)/bets_team2_amount)/(1-CUT)) - match.team1_amount
+        elif curr_odd > req_odd:
+            new_admin_bet_amount = match.team1_amount*((curr_odd-req_odd)/(req_odd-1))
             new_admin_bet = AdminBet()
             admin_team = Team.objects.get(name=match.team1.name)
             new_admin_bet.match = match
@@ -470,17 +470,17 @@ def heal_with_av(match, team_num, odd):
 
     if team_num == 2:
         req_odd = odd
-        curr_odd  = match.get_multipliers()[1]
+        curr_odd  = match.get_multipliers[1]
         if req_odd>curr_odd:
-            new_admin_bet_amount = (((req_odd-1)*match.team2_amount)/(1-CUT)) - match.team1_amount
+            new_admin_bet_amount = match.team2_amount*((req_odd - curr_odd)/(1-CUT))
             new_admin_bet = AdminBet()
-            admin_team = Team.objects.get(name=match.team2.name)
+            admin_team = Team.objects.get(name=match.team1.name)
             new_admin_bet.match = match
             new_admin_bet.amount = new_admin_bet_amount
             new_admin_bet.team = admin_team
             new_admin_bet.save()
-        else:
-            new_admin_bet_amount = (((req_odd-1)/bets_team1_amount)/(1-CUT)) - match.team2_amount
+        elif curr_odd > req_odd:
+            new_admin_bet_amount = match.team2_amount*((curr_odd-req_odd)/(req_odd-1))
             new_admin_bet = AdminBet()
             admin_team = Team.objects.get(name=match.team2.name)
             new_admin_bet.match = match
@@ -490,7 +490,61 @@ def heal_with_av(match, team_num, odd):
 
 
 def heal_without_av(match, team_num, odd):
-    pass
+    bets = Bet.objects.all().filter(match=match).order_by('-datetime')
+    team1 = Team.objects.get(name=match.team1.name)
+    team2 = Team.objects.get(name=match.team2.name)
+    bets_team1 = bets.filter(team=team1)
+    bets_team2 = bets.filter(team=team2)
+    bets_team1_amount = 0
+    for bet in bets_team1:
+        bets_team1_amount += bet.amount
+    bets_team2_amount = 0
+    for bet in bets_team2:
+        bets_team2_amount += bet.amount
+    
+    x = bets_team1_amount
+    y = bets_team2_amount
+    match = Match.objects.get(match_pk=match.match_pk)
+    print("Team num : {}, CUT : {}, req_odd : {}".format(team_num,CUT,odd))
+    if team_num == 1:
+        req_odd = odd
+        curr_odd  = match.get_multipliers[0]
+        if req_odd>curr_odd:
+            new_admin_bet_amount = match.team1_amount*((req_odd - curr_odd)/(1-CUT))
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team2.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
+        elif curr_odd > req_odd:
+            new_admin_bet_amount = match.team1_amount*((curr_odd-req_odd)/(req_odd-1))
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team1.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
+
+    if team_num == 2:
+        req_odd = odd
+        curr_odd  = match.get_multipliers[1]
+        if req_odd>curr_odd:
+            new_admin_bet_amount = match.team2_amount*((req_odd - curr_odd)/(1-CUT))
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team1.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
+        elif curr_odd > req_odd:
+            new_admin_bet_amount = match.team2_amount*((curr_odd-req_odd)/(req_odd-1))
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team2.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
 
 
 def healMatch(request):
@@ -502,7 +556,7 @@ def healMatch(request):
     if request.method=="POST":
         match_pk = request.POST.get('match_pk')
         odd = float(request.POST.get('odd'))
-        team_num = int(request.POST.get('team_num')) 
+        team_num = int(request.POST.get('team_num'))
         match = Match.objects.get(match_pk=match_pk)
         av = AdminBetVapourizer.objects.get(match=Match.objects.get(match_pk=match_pk))
         if av.status:
