@@ -51,6 +51,27 @@ class Match(models.Model):
         kol = str(self.match_pk) + "__" +  teams_abbrv[self.team1.name] + "__" + teams_abbrv[self.team2.name]
         return kol
     
+
+    @property
+    def team1_score(self):
+        games = Game.objects.all().filter(match=Match.objects.get(match_pk=self.match_pk))
+        t1_score = 0
+        for game in games:
+            if game.team1_score > game.team2_score:
+                t1_score += 1
+        return t1_score
+
+
+    @property
+    def team2_score(self):
+        games = Game.objects.all().filter(match=Match.objects.get(match_pk=self.match_pk))
+        t2_score = 0
+        for game in games:
+            if game.team1_score < game.team2_score:
+                t2_score += 1
+        return t2_score
+
+
     @property
     def num_games(self):
         numg = len(list(Game.objects.all().filter(match=Match.objects.get(match_pk=self.match_pk))))
@@ -115,6 +136,24 @@ class Game(models.Model):
         mysets = Set.objects.all().filter(game=Game.objects.get(game_pk=self.pk))
         return len(mysets)
 
+    @property
+    def team1_score(self):
+        sets = Set.objects.all().filter(game=Game.objects.get(game_pk=self.game_pk))
+        t1_score = 0
+        for myset in sets:
+            if myset.team1_score > myset.team2_score:
+                t1_score += 1
+        return t1_score
+
+
+    @property
+    def team2_score(self):
+        sets = Set.objects.all().filter(game=Game.objects.get(game_pk=self.game_pk))
+        t2_score = 0
+        for myset in sets:
+            if myset.team1_score < myset.team2_score:
+                t2_score += 1
+        return t2_score
 
     def declare_winner(self):
         if self.team1_score>self.team2_score:

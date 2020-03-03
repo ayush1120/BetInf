@@ -7,7 +7,7 @@ import math
 
 YES = ['Y','y','yes','YES','Yes','YEs','yEs','yeS','YeS','yES']
 NO = ['N','n',"NO",'no','No','nO']
-
+CUT = 0.19
 
 class BET:
     def __init__(self, idx, m_id, side, amount, ratio):
@@ -34,8 +34,8 @@ def clear():
 
 def get_odds(x,y):
     o1,o2 = 1,1
-    o1 += (y/x)*0.88
-    o2 += (x/y)*0.88
+    o1 += (y/x)*(1-CUT)
+    o2 += (x/y)*(1-CUT)
     return water_down(o1),water_down(o2)
 
 def show_odds(team1, team2, x, y):

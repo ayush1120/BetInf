@@ -17,7 +17,7 @@ import random
 import uuid
 from stoned.settings import BASE_DIR, STATICFILES_DIRS, MEDIA_URL
 from boobi.models import Match, Bet, Team, Game, Set, AdminBet, AdminBetVapourizer
-from boobi.includes.bett import water_down
+from boobi.includes.bett import water_down, CUT
 
 
 @csrf_exempt
@@ -260,16 +260,6 @@ def addSet(request):
     if request.method == "POST":
         game_pk = request.POST.get("game_pk")
         game = Game.objects.get(game_pk=game_pk)
-        if len(Set.objects.all().filter(game=game))>0:
-            old_set = Set.objects.get(game=game, set_num=game.num_sets)
-            old_set.ended = True
-            if(old_set.team1_score>old_set.team2_score):
-                game.team1_score += 1
-                game.save()
-            elif(old_set.team1_score<old_set.team2_score):
-                game.team2_score += 1
-                game.save()
-
 
         myset = Set()  
         myset.game = Game.objects.get(game_pk=game_pk)
@@ -429,7 +419,86 @@ def toogleAVStatus(request):
             return redirect('home')
     return redirect('home')
 
+
+def heal_with_av(match, team_num, odd):
+    bets = Bet.objects.all().filter(match=match).order_by('-datetime')
+    team1 = Team.objects.get(name=match.team1.name)
+    team2 = Team.objects.get(name=match.team2.name)
+    bets_team1 = bets.filter(team=team1)
+    bets_team2 = bets.filter(team=team2)
+    bets_team1_amount = 0
+    for bet in bets_team1:
+        bets_team1_amount += bet.amount
+    bets_team2_amount = 0
+    for bet in bets_team2:
+        bets_team2_amount += bet.amount
+    
+    x = bets_team1_amount
+    y = bets_team2_amount
+    admin_bets = AdminBet.objects.all().filter(match=match)
+    for admin_bet in admin_bets:
+        match = Match.objects.get(match_pk=match.match_pk)
+        if admin_bet.team.name == match.team1.name:
+            match.team1_amount -= admin_bet.amount
+            match.save()
+            admin_bet.delete()
+        elif admin_bet.team.name == match.team2.name:
+            match.team2_amount -= admin_bet.amount
+            match.save()
+            admin_bet.delete()
+    
+    match = Match.objects.get(match_pk=match.match_pk)
+    if team_num == 1:
+        req_odd = odd
+        curr_odd  = match.get_multipliers()[0]
+        if req_odd>curr_odd:
+            new_admin_bet_amount = (((req_odd-1)*match.team1_amount)/(1-CUT)) - match.team2_amount
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team1.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
+        else:
+            new_admin_bet_amount = (((req_odd-1)/bets_team2_amount)/(1-CUT)) - match.team1_amount
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team1.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
+
+    if team_num == 2:
+        req_odd = odd
+        curr_odd  = match.get_multipliers()[1]
+        if req_odd>curr_odd:
+            new_admin_bet_amount = (((req_odd-1)*match.team2_amount)/(1-CUT)) - match.team1_amount
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team2.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
+        else:
+            new_admin_bet_amount = (((req_odd-1)/bets_team1_amount)/(1-CUT)) - match.team2_amount
+            new_admin_bet = AdminBet()
+            admin_team = Team.objects.get(name=match.team2.name)
+            new_admin_bet.match = match
+            new_admin_bet.amount = new_admin_bet_amount
+            new_admin_bet.team = admin_team
+            new_admin_bet.save()
+
+
+def heal_without_av(match, team_num, odd):
+    pass
+
+
 def healMatch(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
+    user_group = user_access_level(request)
+    if not (user_group['healer'] or user_group['bookie']):
+        return redirect('home')
     if request.method=="POST":
         match_pk = request.POST.get('match_pk')
         odd = float(request.POST.get('odd'))
@@ -437,13 +506,7 @@ def healMatch(request):
         match = Match.objects.get(match_pk=match_pk)
         av = AdminBetVapourizer.objects.get(match=Match.objects.get(match_pk=match_pk))
         if av.status:
-            bets = Bet.objects.all().filter(match=match).order_by('-datetime')
-            team1 = Team.objects.get(name=match.team1.name)
-            team2 = Team.objects.get(name=match.team2.name)
-            bets_team1 = bets.filter(team=team1)
-            bets_team2 = bets.filter(team=team2)
+            heal_with_av(match, team_num, odd)
         else:
-            pass
-    return JsonResponse({
-        "everything":"OK"
-    })
+            heal_without_av(match, team_num, odd)
+    return redirect('home')
