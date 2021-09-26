@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'boobi',
+    'betinf',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +54,7 @@ ROOT_URLCONF = 'stoned.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,10 +64,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries':{
-                'addstr': 'boobi.templatetags.boobi_extras',
-                'matchgames': 'boobi.templatetags.boobi_extras',
-                'set_team1_score': 'boobi.templatetags.boobi_extras',
-                'set_team2_score': 'boobi.templatetags.boobi_extras',
+                'addstr': 'betinf.templatetags.betinf.betinf_extras',
+                'matchgames': 'betinf.templatetags.betinf.betinf_extras',
+                'set_team1_score': 'betinf.templatetags.betinf.betinf_extras',
+                'set_team2_score': 'betinf.templatetags.betinf.betinf_extras',
             }
         },
     },

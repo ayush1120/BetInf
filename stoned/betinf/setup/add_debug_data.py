@@ -11,9 +11,8 @@ from pathlib import Path
 
 random.seed(69)
 
-path = Path.cwd()
-print('current : ', path.absolute())
-print('ROOTDIR : ', path.parent.absolute())
+settings_path = os.path.join(__file__)
+print('setting path : ', settings_path)
 # os.chdir(ROOT_DIR)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "stoned.settings")

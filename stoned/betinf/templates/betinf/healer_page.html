@@ -1,0 +1,181 @@
+{% load static %}
+{% load addstr %}
+{% load matchgames %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>Healer @BetInf|BetInf</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{% static "betinf/css/materialize.css" %}" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="{% static "betinf/css/style.css" %}" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <script>
+        var options = {}
+        document.addEventListener('DOMContentLoaded', function () {
+            M.AutoInit();
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.dropdown-trigger');
+            var instances = M.Dropdown.init(elems, options);
+        });
+    </script>
+
+    {% include 'betinf/navbar.html' %}
+    <form id="{{ match.match_pk|addstr:"toogleAVStatus" }}" action="{% url 'avStatusToogle' %}"
+        enctype="multipart/form-data" method='POST'>
+        {% csrf_token %}
+        <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+    </form>
+
+    <div class="card darken-1 center-align">
+        <div class="card-content">
+            <div class="row">
+                <div class="col s12">
+                    <span class="card-title"><b>{{match.team1.name}} vs. {{match.team2.name}}
+                            ({{match.sport}})</b></span>
+                </div>
+            </div>
+            <br>
+            <div class="divider"></div>
+            <div class="row">
+
+                <table class="striped ">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <div class="col s6">
+                                    <img src="{{match.team1.logo.url}}" alt="" class="responsive-img">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col s6">
+                                    <img src="{{match.team2.logo.url}}" alt="" class="responsive-img">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Profit</th>
+                            <td>{{profit.0}}</td>
+                            <td>{{profit.1}}</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <th>Current Odds</th>
+                            <td>{{odds.0}}</td>
+                            <td>{{odds.1}}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Real Bet</th>
+                            <td>{{bets_amount_team_1}} ({{bets_team1}} Bets) </td>
+                            <td>{{bets_amount_team_2}} ({{bets_team2}} Bets)</td>
+                        </tr>
+                        <tr>
+                            <th>Total Admin Bet</th>
+                            <td>{{admin_bets_amount_team_1}}</td>
+                            <td>{{admin_bets_amount_team_2}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="row">
+                <h4>Heal</h4>
+            </div>
+            <div class="row" style="align-items:center;">
+                <div class="col s8" style="align-content: flex-end;">
+                    <div style="font-weight: bold;">
+                        <h5>Admin Token Vapourization : </h5>
+                    </div>
+                </div>
+                <div class="input-field col s4" style="align-content: flex-start;">
+                    <div>
+                        <button id="avbutton" form="{{ match.match_pk|addstr:"toogleAVStatus" }}"
+                            class="btn waves-effect waves-light" type="submit">
+                            {% if av.status %}
+                            Turn AV OFF
+                            {% else %}
+                            Turn AV ON
+                            {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <form id="{{ match.match_pk|addstr:"healMatch" }}" action="{% url 'healMatch' %}"
+                    enctype="multipart/form-data" method='POST'>
+                    {% csrf_token %}
+                    <input type="hidden" name="match_pk" value="{{match.match_pk}}">
+                    <div class="input-field col s4">
+                        <input placeholder="1.4" min="1.00000" max="20.00000" name="odd" id="odds" type="number" step="0.1"
+                            class="validate">
+                        <label for="odds">Odds</label>
+                    </div>
+
+                    <div class=" input-field col s5">
+                        <select name="team_num">
+                            <option value="" disabled selected>Team</option>
+                            <option value="1" selected>{{match.team1.name}}</option>
+                            <option value="2" selected>{{match.team2.name}}</option>
+
+                        </select>
+                        <label>Select Team</label>
+                    </div>
+
+                    <div class="input-field col s3">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+
+            <div class="divider"></div>
+            <div class="row">
+                {% include 'betinf/recent_tokens.html' %}
+            </div>
+
+        </div>
+
+        <footer class="page-footer orange">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">Disclaimer</h5>
+                        <p class="grey-text text-lighten-4">Please read all the terms and conditions before placing your
+                            bets.</p>
+                        <p class="grey-text text-lighten-4">Odds may be different. Contact our representatives for more
+                            details.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+                </div>
+            </div>
+        </footer>
+
+
+        <!--  Scripts-->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="{% static "betinf/js/materialize.js" %}"></script>
+        <script src="{% static  "js/init.js" %}"></script>
+
+</body>
+
+</html>

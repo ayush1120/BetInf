@@ -22,7 +22,8 @@ from stoned import settings
 urlpatterns = [
     
     path('admin/', admin.site.urls),
-    path('', include('boobi.urls')), # new
+    path('', include('betinf.urls')), # new
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

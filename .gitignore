@@ -117,3 +117,8 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+
+# removing backup directory
+stoned/backup
+.idea 
