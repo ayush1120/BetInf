@@ -120,4 +120,7 @@ GitHub.sublime-settings
 
 
 # removing backup directory
+backup
+stoned/backup
+
 .idea 
