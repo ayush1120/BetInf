@@ -1,0 +1,29 @@
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="{% url 'home' %}" class="brand-logo">BETINF</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="#" class="active" >Active Matches</a></li>
+            <li><a href="#">All Matches</a></li>
+            {% if user_group.admin %}
+            <li><a href="{% url 'addmatch' %}">Add Match</a></li>
+            {% endif %}
+            {% if user.is_authenticated%}
+            <li><a href="{% url 'signout' %}">Sign Out</a></li>
+            {% else %}
+            <li><a href="{% url 'signin' %}">Sign In</a></li>
+            {% endif %}
+          </ul>
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="#">All Matches</a></li>
+            <li><a href="#">Active Matches</a></li>
+            {% if user_group.admin %}
+            <li><a href="{% url 'addmatch' %}">Add Match</a></li>
+            {% endif %}
+            {% if user.is_authenticated%}
+            <li><a href="{% url 'signout' %}">Sign Out</a></li>
+            {% else %}
+            <li><a href="{% url 'signin' %}">Sign In</a></li>
+            {% endif %}
+          </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
