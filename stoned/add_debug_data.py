@@ -43,8 +43,21 @@ team_images = {
  "Vikings"      : os.path.join("betinf", "setup", "team_logos", "Vikings.png")
  }
 
+team_image_dests = {
+ "Battle Hawks" : os.path.join("betinf", "team_logos", "Battle_Hawk.png"),
+ "Renegades"    : os.path.join("betinf", "team_logos", "Renegades.png"), 
+ "Defenders"    : os.path.join("betinf", "team_logos", "Defenders.png"),
+ "Spartans"     : os.path.join("betinf", "team_logos", "Spartans.png"),
+ "Vipers"       : os.path.join("betinf", "team_logos", "Vipers.png"),
+ "Phoenix"      : os.path.join("betinf", "team_logos", "Phoenix.png"),
+ "Dementors"    : os.path.join("betinf", "team_logos", "Dementors.png"),
+ "Vikings"      : os.path.join("betinf", "team_logos", "Vikings.png")
+ }
+
 sports = ["Badminton", "Tennis", "Basketball"]
 password = "toothpaste"
+
+
 def add_data():
     serial=1
     User.objects.create_superuser('ayush', 'ayush@iitbhilai.ac.in', password)
@@ -53,9 +66,8 @@ def add_data():
     User.objects.create_user('healer', 'ankit@betinf.com', password)
 
     bookie, _ = Group.objects.get_or_create(name="Bookie")
-    scout, _ = Group.objects.get_or_create(name="Scout")
+    scout, _  = Group.objects.get_or_create(name="Scout")
     healer, _ = Group.objects.get_or_create(name="Healer") 
-    
 
     mml = User.objects.get(username="bookie")
     sukhiya = User.objects.get(username="scout")
@@ -87,7 +99,8 @@ def add_data():
     for team in teams:
         a = Team()
         a.name = team
-        a.logo.name = team_images[team]
+        # a.logo.name = team_images[team]
+        a.logo.name = team_image_dests[team]
         # a.logo.path = os.path.join("betinf", "setup", "team_logos", "logo_file_name.png")
         a.save()
     num_matches = random.randint(7, 11)

@@ -122,5 +122,5 @@ GitHub.sublime-settings
 # removing backup directory
 backup
 stoned/backup
-
+stoned/db.sqlite3
 .idea 

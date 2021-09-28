@@ -1,5 +1,9 @@
+{% load static %}
+
 <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="{% url 'home' %}" class="brand-logo">BETINF</a>
+    <div class="nav-wrapper container"><a id="logo-container" href="{% url 'home' %}" class="brand-logo">
+      <img style="height: 50px; width: auto; vertical-align: middle; margin-bottom: 8%;" 
+            src="{% static "betinf/images/betinf_logo.png" %}" alt="BetInf logo"></a>
         <ul class="right hide-on-med-and-down">
             <li><a href="#" class="active" >Active Matches</a></li>
             <li><a href="#">All Matches</a></li>
