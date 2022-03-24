@@ -43,7 +43,7 @@
     <div class="container center">
       <br><br>
       <!-- <h1 class="header center orange-text">BETINF</h1> -->
-      <img src="{% static "betinf/images/betinf_logo.png" %}" alt="BetInf logo">
+      <img src="{% static "betinf/images/betinf_logo_detailed.png" %}" alt="BetInf logo">
       <div class="row center">
         <h5 class="header col s12 light">भारतीय प्रौद्योगिकी संस्थान Sejbahar's No.1 Sports Platform</h5>
       </div>
@@ -55,9 +55,11 @@
     <div class="section">
       <div class="row">
         {% for match in matches %}
-        <div class="col l4 m6 s12">
-          {% include 'betinf/match_card.html' %}
-        </div>
+        
+          <div class="col s12 m12 l12 xl12">
+            {% include 'betinf/match_card.html' %}
+          </div>
+        
         {% endfor %}
       </div>
     </div>
@@ -87,7 +89,7 @@
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="{% static "betinf/js/materialize.js" %}"></script>
-  <script src="{% static  "js/init.js" %}"></script>
+  <script src="{% static  "betinf/js/init.js" %}"></script>
 
 </body>
 
